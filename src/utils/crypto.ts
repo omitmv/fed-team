@@ -24,6 +24,10 @@ export class PasswordCrypto {
    * @returns Senha criptografada
    */
   static encrypt(senha: string): string {
+    if (!senha || senha.trim() === '') {
+      throw new Error('Senha não pode estar vazia');
+    }
+
     try {
       // Passo 1: Aplicar base64
       const base64Password = btoa(senha);
@@ -121,6 +125,9 @@ export class UserDataFormatter {
   static formatDataCadastro(dataCadastro: string): string {
     try {
       const date = new Date(dataCadastro);
+      if (isNaN(date.getTime())) {
+        return 'Data inválida';
+      }
       return date.toLocaleString('pt-BR', {
         day: '2-digit',
         month: '2-digit',
@@ -145,6 +152,9 @@ export class UserDataFormatter {
 
     try {
       const date = new Date(dtExpiracao);
+      if (isNaN(date.getTime())) {
+        return 'Data inválida';
+      }
       return date.toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: '2-digit',
