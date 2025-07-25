@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useApi, useApiCreate, useApiUpdate, useApiDelete } from '../hooks/useApi';
+import { useApi, useApiCreate, useApiUpdate, useApiDelete } from '../../../hooks/useApi';
 import { Usuario, UsuarioCreate, UsuarioUpdate } from '../types';
-import { ENDPOINTS } from '../constants';
-import { UserDataFormatter } from '../utils/crypto';
+import { ENDPOINTS } from '../../../constants';
+import { UserDataFormatter } from '../../../utils/crypto';
 import '../styles/UsuarioList.css';
 
 const UsuarioList: React.FC = () => {

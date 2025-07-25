@@ -56,7 +56,7 @@ console.log(loginMascarado); // "jo*******23"
 ```typescript
 import React from 'react';
 import { useApi, useApiCreate, useApiUpdate, useApiDelete } from './src/hooks/useApi';
-import { Usuario, UsuarioCreate } from './src/types';
+import { Usuario, UsuarioCreate } from './src/features/usuario/types';
 import { ENDPOINTS } from './src/constants';
 
 function ExemploComponente() {

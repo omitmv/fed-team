@@ -1,101 +1,48 @@
-// Tipos e interfaces da aplicação
+// Tipos e interfaces globais da aplicação
 
 /**
- * Interface para o usuário do sistema
+ * Interface para resposta padrão da API
  */
-export interface Usuario {
-  cdUsuario: number;           // Chave única, chave primária, auto-incrementável
-  login: string;               // Chave única, não pode ser nulo, máximo 250 caracteres
-  senha: string;               // Senha criptografada retornada pela API (base64 + md5)
-  nome: string;                // Não pode ser nulo, máximo 250 caracteres
-  email: string;               // Chave única, não pode ser nulo, máximo 250 caracteres
-  dataCadastro: string;        // DateTime, valor padrão: data e hora atual
-  flAtivo: boolean;            // Valor padrão: true
-  dtExpiracao?: string;        // DateTime, opcional
-}
-
-/**
- * Interface para criação de usuário (sem cdUsuario e dataCadastro)
- * IMPORTANTE: senha deve ser enviada em texto plano - API fará a criptografia
- */
-export interface UsuarioCreate {
-  login: string;
-  senha: string;               // Senha em texto plano - será criptografada pela API
-  nome: string;
-  email: string;
-  flAtivo?: boolean;
-  dtExpiracao?: string;
-}
-
-/**
- * Interface para atualização de usuário (todos os campos opcionais exceto cdUsuario)
- * IMPORTANTE: senha, se fornecida, deve ser em texto plano - API fará a criptografia
- */
-export interface UsuarioUpdate {
-  login?: string;
-  senha?: string;              // Nova senha em texto plano - será criptografada pela API
-  nome?: string;
-  email?: string;
-  flAtivo?: boolean;
-  dtExpiracao?: string;
-}
-
 export interface ApiResponse<T> {
   data: T;
   message?: string;
   status: number;
 }
 
+/**
+ * Interface para erro da API
+ */
 export interface ApiError {
   message: string;
   status: number;
   code?: string;
 }
 
+/**
+ * Interface para estado de loading
+ */
 export interface LoadingState {
   isLoading: boolean;
   error: string | null;
 }
 
-// Tipos para configurações da API
+/**
+ * Tipos para configurações da API
+ */
 export interface ApiConfig {
   baseURL: string;
   timeout: number;
   retries?: number;
 }
 
-// Tipos para hooks personalizados
+/**
+ * Interface para resultado de hooks de API
+ */
 export interface UseApiResult<T> {
   data: T | null;
   loading: boolean;
   error: string | null;
   refetch: () => Promise<void>;
-}
-
-/**
- * Interface para resposta de autenticação
- */
-export interface AuthResponse {
-  usuario: Usuario;
-  token?: string;
-  message: string;
-}
-
-/**
- * Interface para formulário de login
- */
-export interface LoginForm {
-  login: string;
-  senha: string;
-}
-
-/**
- * Enum para status do usuário
- */
-export enum StatusUsuario {
-  ATIVO = 'ATIVO',
-  INATIVO = 'INATIVO',
-  EXPIRADO = 'EXPIRADO'
 }
 
 /**
@@ -119,6 +66,41 @@ export interface Pagination {
 export interface PaginatedResponse<T> {
   data: T[];
   pagination: Pagination;
+}
+
+/**
+ * Interface para configuração de formulários
+ */
+export interface FormConfig {
+  autoFocus?: boolean;
+  validateOnBlur?: boolean;
+  validateOnChange?: boolean;
+}
+
+/**
+ * Interface para validação de campos
+ */
+export interface FieldValidation {
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: RegExp;
+  customValidator?: (value: any) => string | null;
+}
+
+/**
+ * Type para temas da aplicação
+ */
+export type Theme = 'light' | 'dark' | 'auto';
+
+/**
+ * Interface para configurações da aplicação
+ */
+export interface AppConfig {
+  theme: Theme;
+  language: string;
+  apiBaseUrl: string;
+  timeout: number;
 }
 
 const types = {};

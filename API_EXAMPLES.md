@@ -4,14 +4,33 @@ Este arquivo contém exemplos práticos de como usar a API configurada no projet
 
 ## 📋 Estrutura dos Dados
 
-### Usuário (User)
+### Usuário (Usuario)
 ```typescript
-interface User {
+interface Usuario {
   id: number;
   name: string;
   email: string;
+  status: StatusUsuario;
   createdAt?: string;
   updatedAt?: string;
+}
+
+interface UsuarioCreate {
+  name: string;
+  email: string;
+  password: string;
+}
+
+interface UsuarioUpdate {
+  name?: string;
+  email?: string;
+  status?: StatusUsuario;
+}
+
+enum StatusUsuario {
+  ATIVO = 'ativo',
+  INATIVO = 'inativo',
+  SUSPENSO = 'suspenso'
 }
 ```
 
@@ -22,10 +41,10 @@ interface User {
 ```typescript
 import React from 'react';
 import { useApi } from '../hooks/useApi';
-import { User } from '../types';
+import { Usuario } from '../features/usuario/types';
 
 const UsersList: React.FC = () => {
-  const { data: users, loading, error, refetch } = useApi<User[]>('/users');
+  const { data: users, loading, error, refetch } = useApi<Usuario[]>('/users');
 
   if (loading) return <div>Carregando...</div>;
   if (error) return <div>Erro: {error}</div>;
@@ -49,10 +68,10 @@ const UsersList: React.FC = () => {
 ```typescript
 import React from 'react';
 import { useApiCreate } from '../hooks/useApi';
-import { User } from '../types';
+import { Usuario, UsuarioCreate } from '../features/usuario/types';
 
 const CreateUser: React.FC = () => {
-  const { create, loading, error } = useApiCreate<User, Omit<User, 'id'>>();
+  const { create, loading, error } = useApiCreate<Usuario, UsuarioCreate>();
 
   const handleCreate = async () => {
     const newUser = await create('/users', {
@@ -81,10 +100,10 @@ const CreateUser: React.FC = () => {
 ```typescript
 import React from 'react';
 import { useApiUpdate } from '../hooks/useApi';
-import { User } from '../types';
+import { Usuario, UsuarioUpdate } from '../features/usuario/types';
 
 const UpdateUser: React.FC<{ userId: number }> = ({ userId }) => {
-  const { update, loading, error } = useApiUpdate<User, Partial<User>>();
+  const { update, loading, error } = useApiUpdate<Usuario, UsuarioUpdate>();
 
   const handleUpdate = async () => {
     const updatedUser = await update(`/users/${userId}`, {
@@ -141,12 +160,12 @@ const DeleteUser: React.FC<{ userId: number }> = ({ userId }) => {
 
 ```typescript
 import { api } from '../services/api';
-import { User } from '../types';
+import { Usuario, UsuarioCreate } from '../features/usuario/types';
 
 // GET - Buscar todos os usuários
-const getUsers = async (): Promise<User[]> => {
+const getUsers = async (): Promise<Usuario[]> => {
   try {
-    const response = await api.get<User[]>('/users');
+    const response = await api.get<Usuario[]>('/users');
     return response.data;
   } catch (error) {
     console.error('Erro ao buscar usuários:', error);
@@ -155,9 +174,9 @@ const getUsers = async (): Promise<User[]> => {
 };
 
 // GET - Buscar usuário por ID
-const getUserById = async (id: number): Promise<User> => {
+const getUserById = async (id: number): Promise<Usuario> => {
   try {
-    const response = await api.get<User>(`/users/${id}`);
+    const response = await api.get<Usuario>(`/users/${id}`);
     return response.data;
   } catch (error) {
     console.error('Erro ao buscar usuário:', error);
@@ -166,7 +185,7 @@ const getUserById = async (id: number): Promise<User> => {
 };
 
 // POST - Criar usuário
-const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
+const createUser = async (userData: UsuarioCreate): Promise<Usuario> => {
   try {
     const response = await api.post<User>('/users', userData);
     return response.data;
@@ -203,10 +222,10 @@ const deleteUser = async (id: number): Promise<void> => {
 ```typescript
 import React, { useState } from 'react';
 import { api } from '../services/api';
-import { User } from '../types';
+import { Usuario } from '../features/usuario/types';
 
 const ManualApiCall: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<Usuario[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -215,7 +234,7 @@ const ManualApiCall: React.FC = () => {
     setError(null);
     
     try {
-      const response = await api.get<User[]>('/users');
+      const response = await api.get<Usuario[]>('/users');
       setUsers(response.data);
     } catch (err: any) {
       setError(err.message || 'Erro ao carregar usuários');
