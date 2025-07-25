@@ -1,40 +1,109 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApi, useApiCreate, useApiUpdate, useApiDelete } from '../hooks/useApi';
-import { User } from '../types';
+import { Usuario, UsuarioCreate, UsuarioUpdate } from '../types';
+import { ENDPOINTS } from '../constants';
+import { UserDataFormatter } from '../utils/crypto';
+import '../styles/UsuarioList.css';
 
-const UserList: React.FC = () => {
+const UsuarioList: React.FC = () => {
+  // Estados para o formulário
+  const [showForm, setShowForm] = useState(false);
+  const [editingUser, setEditingUser] = useState<Usuario | null>(null);
+  const [formData, setFormData] = useState<UsuarioCreate>({
+    login: '',
+    senha: '',
+    nome: '',
+    email: '',
+    flAtivo: true,
+    dtExpiracao: '',
+  });
+
   // Usando hooks customizados para operações da API
-  const { data: users, loading, error, refetch } = useApi<User[]>('/users');
-  const { create, loading: createLoading, error: createError } = useApiCreate<User, Omit<User, 'id'>>();
-  const { update, loading: updateLoading, error: updateError } = useApiUpdate<User, Partial<User>>();
+  const { data: usuarios, loading, error, refetch } = useApi<Usuario[]>(ENDPOINTS.USUARIOS);
+  const { create, loading: createLoading, error: createError } = useApiCreate<Usuario, UsuarioCreate>();
+  const { update, loading: updateLoading, error: updateError } = useApiUpdate<Usuario, UsuarioUpdate>();
   const { deleteResource, loading: deleteLoading, error: deleteError } = useApiDelete();
 
   // Função para criar um novo usuário
-  const handleCreateUser = async () => {
-    const userData = { 
-      name: 'Novo Usuário', 
-      email: 'novo@exemplo.com' 
-    };
-    
-    const newUser = await create('/users', userData);
+  const handleCreateUser = async (userData: UsuarioCreate) => {
+    // Enviar senha em texto plano - criptografia será feita no backend
+    const newUser = await create(ENDPOINTS.USUARIOS, userData);
     if (newUser) {
       refetch(); // Recarrega a lista após criar
+      setShowForm(false);
+      resetForm();
     }
   };
 
   // Função para atualizar um usuário
-  const handleUpdateUser = async (id: number, name: string) => {
-    const updatedUser = await update(`/users/${id}`, { name: name + ' (Atualizado)' });
+  const handleUpdateUser = async (cdUsuario: number, userData: UsuarioUpdate) => {
+    // Enviar senha em texto plano - criptografia será feita no backend
+    const updatedUser = await update(ENDPOINTS.USUARIO_BY_ID(cdUsuario), userData);
     if (updatedUser) {
       refetch(); // Recarrega a lista após atualizar
+      setEditingUser(null);
+      resetForm();
     }
   };
 
   // Função para deletar um usuário
-  const handleDeleteUser = async (id: number) => {
-    const success = await deleteResource(`/users/${id}`);
-    if (success) {
-      refetch(); // Recarrega a lista após deletar
+  const handleDeleteUser = async (cdUsuario: number) => {
+    if (window.confirm('Tem certeza que deseja deletar este usuário?')) {
+      const success = await deleteResource(ENDPOINTS.USUARIO_BY_ID(cdUsuario));
+      if (success) {
+        refetch(); // Recarrega a lista após deletar
+      }
+    }
+  };
+
+  // Função para resetar o formulário
+  const resetForm = () => {
+    setFormData({
+      login: '',
+      senha: '',
+      nome: '',
+      email: '',
+      flAtivo: true,
+      dtExpiracao: '',
+    });
+    setEditingUser(null);
+    setShowForm(false);
+  };
+
+  // Função para iniciar edição
+  const startEdit = (usuario: Usuario) => {
+    setEditingUser(usuario);
+    setFormData({
+      login: usuario.login,
+      senha: '', // Não mostrar senha atual
+      nome: usuario.nome,
+      email: usuario.email,
+      flAtivo: usuario.flAtivo,
+      dtExpiracao: usuario.dtExpiracao || '',
+    });
+    setShowForm(true);
+  };
+
+  // Função para submeter o formulário
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (editingUser) {
+      // Atualização - não enviar campos vazios
+      const updateData: UsuarioUpdate = {};
+      if (formData.login !== editingUser.login) updateData.login = formData.login;
+      if (formData.senha) updateData.senha = formData.senha;
+      if (formData.nome !== editingUser.nome) updateData.nome = formData.nome;
+      if (formData.email !== editingUser.email) updateData.email = formData.email;
+      if (formData.flAtivo !== editingUser.flAtivo) updateData.flAtivo = formData.flAtivo;
+      if (formData.dtExpiracao !== (editingUser.dtExpiracao || '')) {
+        updateData.dtExpiracao = formData.dtExpiracao || undefined;
+      }
+      
+      handleUpdateUser(editingUser.cdUsuario, updateData);
+    } else {
+      // Criação
+      handleCreateUser(formData);
     }
   };
 
@@ -61,13 +130,23 @@ const UserList: React.FC = () => {
     <div className="user-list">
       <h2>Lista de Usuários</h2>
       
-      <button 
-        onClick={refetch} 
-        className="refresh-btn"
-        disabled={isOperationLoading}
-      >
-        {isOperationLoading ? 'Processando...' : 'Atualizar Lista'}
-      </button>
+      <div className="actions">
+        <button 
+          onClick={refetch} 
+          className="refresh-btn"
+          disabled={isOperationLoading}
+        >
+          {isOperationLoading ? 'Processando...' : 'Atualizar Lista'}
+        </button>
+        
+        <button 
+          onClick={() => setShowForm(!showForm)}
+          className="add-btn"
+          disabled={isOperationLoading}
+        >
+          {showForm ? 'Cancelar' : 'Novo Usuário'}
+        </button>
+      </div>
 
       {operationError && (
         <div className="error">
@@ -75,50 +154,136 @@ const UserList: React.FC = () => {
         </div>
       )}
 
-      {!users || users.length === 0 ? (
+      {/* Formulário de criação/edição */}
+      {showForm && (
+        <div className="user-form">
+          <h3>{editingUser ? 'Editar Usuário' : 'Novo Usuário'}</h3>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="login">Login:</label>
+              <input
+                type="text"
+                id="login"
+                value={formData.login}
+                onChange={(e) => setFormData({ ...formData, login: e.target.value })}
+                maxLength={250}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="senha">Senha:</label>
+              <input
+                type="password"
+                id="senha"
+                value={formData.senha}
+                onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
+                placeholder={editingUser ? 'Deixe vazio para manter a atual' : ''}
+                required={!editingUser}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="nome">Nome:</label>
+              <input
+                type="text"
+                id="nome"
+                value={formData.nome}
+                onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                maxLength={250}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email">E-mail:</label>
+              <input
+                type="email"
+                id="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                maxLength={250}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="flAtivo">
+                <input
+                  type="checkbox"
+                  id="flAtivo"
+                  checked={formData.flAtivo}
+                  onChange={(e) => setFormData({ ...formData, flAtivo: e.target.checked })}
+                />
+                Usuário Ativo
+              </label>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="dtExpiracao">Data de Expiração:</label>
+              <input
+                type="date"
+                id="dtExpiracao"
+                value={formData.dtExpiracao}
+                onChange={(e) => setFormData({ ...formData, dtExpiracao: e.target.value })}
+              />
+            </div>
+
+            <div className="form-actions">
+              <button type="submit" disabled={isOperationLoading}>
+                {editingUser ? 'Atualizar' : 'Criar'}
+              </button>
+              <button type="button" onClick={resetForm}>
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Lista de usuários */}
+      {!usuarios || usuarios.length === 0 ? (
         <p>Nenhum usuário encontrado.</p>
       ) : (
-        <ul>
-          {users.map(user => (
-            <li key={user.id} className="user-item">
-              <div>
-                <strong>{user.name}</strong>
-                <br />
-                <span>{user.email}</span>
+        <div className="users-grid">
+          {usuarios.map(usuario => (
+            <div key={usuario.cdUsuario} className="user-card">
+              <div className="user-info">
+                <h4>{usuario.nome}</h4>
+                <p><strong>Login:</strong> {usuario.login}</p>
+                <p><strong>E-mail:</strong> {usuario.email}</p>
+                <p><strong>Cadastro:</strong> {UserDataFormatter.formatDataCadastro(usuario.dataCadastro)}</p>
+                <p><strong>Expiração:</strong> {UserDataFormatter.formatDataExpiracao(usuario.dtExpiracao)}</p>
+                <p>
+                  <strong>Status:</strong> 
+                  <span className={`status ${UserDataFormatter.getUserStatus(usuario.flAtivo, usuario.dtExpiracao).toLowerCase()}`}>
+                    {UserDataFormatter.getUserStatus(usuario.flAtivo, usuario.dtExpiracao)}
+                  </span>
+                </p>
               </div>
+              
               <div className="user-actions">
                 <button 
-                  onClick={() => handleUpdateUser(user.id, user.name)}
+                  onClick={() => startEdit(usuario)}
                   className="update-btn"
                   disabled={isOperationLoading}
                 >
-                  {updateLoading ? 'Atualizando...' : 'Atualizar'}
+                  Editar
                 </button>
                 <button 
-                  onClick={() => handleDeleteUser(user.id)}
+                  onClick={() => handleDeleteUser(usuario.cdUsuario)}
                   className="delete-btn"
                   disabled={isOperationLoading}
                 >
-                  {deleteLoading ? 'Deletando...' : 'Deletar'}
+                  Deletar
                 </button>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
-
-      <div className="add-user">
-        <h3>Adicionar Novo Usuário</h3>
-        <button 
-          onClick={handleCreateUser}
-          className="add-btn"
-          disabled={isOperationLoading}
-        >
-          {createLoading ? 'Criando...' : 'Adicionar Usuário de Exemplo'}
-        </button>
-      </div>
     </div>
   );
 };
 
-export default UserList;
+export default UsuarioList;

@@ -1,17 +1,18 @@
 import React from 'react';
 import './App.css';
-import UserList from './components/UserList';
+import UsuarioList from './components/UserList';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Fed Team - React + Axios Project</h1>
-        <p>Projeto front-end com integração à API</p>
+        <h1>Fed Team - Sistema de Usuários</h1>
+        <p>Gerenciamento de Usuários com React + TypeScript</p>
+        <p>API: {process.env.REACT_APP_API_BASE_URL}</p>
       </header>
       
       <main className="App-main">
-        <UserList />
+        <UsuarioList />
       </main>
     </div>
   );
