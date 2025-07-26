@@ -454,3 +454,40 @@
   text-decoration: none;
   background: transparent;
 }
+
+/* ======= CONTAINER DE CENTRALIZAÇÃO ======= */
+
+.container-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: var(--spacing-lg);
+  box-sizing: border-box;
+}
+
+/* Card específico para login */
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Ajuste para mobile */
+@media (max-width: 768px) {
+  .container-center {
+    padding: var(--spacing-md);
+    min-height: 100vh;
+  }
+  
+  .login-card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .container-center {
+    padding: var(--spacing-sm);
+  }
+}

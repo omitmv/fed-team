@@ -46,7 +46,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="container-center">
-      <div className="card">
+      <div className="card login-card">
         <div className="card-body">
           {error && (
             <div className="alert alert-danger">
