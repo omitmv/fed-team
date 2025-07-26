@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { LoginCredentials } from '../types';
-import '../styles/Login.css';
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState<LoginCredentials>({
@@ -46,69 +45,74 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h1 className="login-title">Entrar no Sistema</h1>
+    <div className="container-center">
+      <div className="card">
+        <div className="card-header">
+          <h1 className="card-title">SportPro</h1>
+          <p className="card-subtitle">Faça login em sua conta</p>
+        </div>
         
-        {error && (
-          <div className="error-message">
-            {error}
-          </div>
-        )}
+        <div className="card-body">
+          {error && (
+            <div className="alert alert-danger">
+              {error}
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label htmlFor="login" className="form-label">
-              Login
-            </label>
-            <input
-              type="text"
-              id="login"
-              name="login"
-              value={formData.login}
-              onChange={handleInputChange}
-              className="form-input"
-              required
-              autoComplete="username"
-              placeholder="Digite seu login"
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="form">
+            <div className="form-group">
+              <label htmlFor="login" className="form-label">
+                Login
+              </label>
+              <input
+                type="text"
+                id="login"
+                name="login"
+                value={formData.login}
+                onChange={handleInputChange}
+                className="form-input"
+                required
+                autoComplete="username"
+                placeholder="Digite seu login"
+              />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="senha" className="form-label">
-              Senha
-            </label>
-            <input
-              type="password"
-              id="senha"
-              name="senha"
-              value={formData.senha}
-              onChange={handleInputChange}
-              className="form-input"
-              required
-              autoComplete="current-password"
-              placeholder="Digite sua senha"
-            />
-          </div>
+            <div className="form-group">
+              <label htmlFor="senha" className="form-label">
+                Senha
+              </label>
+              <input
+                type="password"
+                id="senha"
+                name="senha"
+                value={formData.senha}
+                onChange={handleInputChange}
+                className="form-input"
+                required
+                autoComplete="current-password"
+                placeholder="Digite sua senha"
+              />
+            </div>
 
-          <div className="form-actions">
+            <div className="form-actions">
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                className="btn btn-ghost btn-sm"
+              >
+                Esqueceu a senha?
+              </button>
+            </div>
+
             <button
-              type="button"
-              onClick={handleForgotPassword}
-              className="forgot-password-link"
+              type="submit"
+              className={`btn btn-primary btn-full ${loading ? 'btn-loading' : ''}`}
+              disabled={loading || !formData.login || !formData.senha}
             >
-              Recuperar senha
+              {loading ? 'Entrando...' : 'Entrar'}
             </button>
-          </div>
-
-          <button
-            type="submit"
-            className="login-button"
-            disabled={loading || !formData.login || !formData.senha}
-          >
-            {loading ? 'Entrando...' : 'Entrar'}
-          </button>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

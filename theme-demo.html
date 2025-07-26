@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportPro - Demonstração do Tema</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Importando as variáveis do tema */
+        :root {
+            /* Cores Principais - SportPro */
+            --color-primary: #0A0F2C;
+            --color-secondary: #FF6B00;
+            --color-accent: #24C6DC;
+            --color-success: #10B981;
+            --color-warning: #F59E0B;
+            --color-danger: #EF4444;
+            --color-white: #FFFFFF;
+            --color-black: #000000;
+            --color-gray-50: #F9FAFB;
+            --color-gray-100: #F3F4F6;
+            --color-gray-200: #E5E7EB;
+            --color-gray-300: #D1D5DB;
+            --color-gray-400: #9CA3AF;
+            --color-gray-500: #6B7280;
+            --color-gray-600: #4B5563;
+            --color-gray-700: #374151;
+            --color-gray-800: #1F2937;
+            --color-gray-900: #111827;
+            --color-text: var(--color-gray-900);
+            --color-text-muted: var(--color-gray-600);
+            --color-background: var(--color-gray-50);
+            --color-background-alt: var(--color-white);
+            --color-border: var(--color-gray-200);
+            
+            /* Gradientes */
+            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+            
+            /* Espaçamento */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            
+            /* Tipografia */
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-size-xs: 12px;
+            --font-size-sm: 14px;
+            --font-size-md: 16px;
+            --font-size-lg: 18px;
+            --font-size-xl: 20px;
+            --font-size-2xl: 24px;
+            --font-size-3xl: 30px;
+            --font-weight-light: 300;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            
+            /* Bordas */
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            --border-radius-xl: 16px;
+            --border-radius-full: 9999px;
+            
+            /* Sombras */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            
+            /* Transições */
+            --transition-base: all 0.2s ease-in-out;
+            --transition-slow: all 0.3s ease-in-out;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--gradient-primary);
+            margin: 0;
+            padding: var(--space-lg);
+            min-height: 100vh;
+            color: var(--color-text);
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+            color: var(--color-white);
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        /* Card Component */
+        .card {
+            background: var(--color-white);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            transition: var(--transition-base);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-header {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .card-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            margin: 0 0 var(--space-sm) 0;
+            color: var(--color-text);
+        }
+
+        .card-subtitle {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            margin: 0;
+        }
+
+        .card-body {
+            padding: var(--space-lg);
+        }
+
+        /* Button Components */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-sm) var(--space-md);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            border-radius: var(--border-radius-md);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition-base);
+            text-decoration: none;
+            min-height: 44px;
+            margin: var(--space-xs);
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .btn-primary:hover {
+            background: color-mix(in srgb, var(--color-primary) 90%, black);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-white);
+        }
+
+        .btn-secondary:hover {
+            background: color-mix(in srgb, var(--color-secondary) 90%, black);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: var(--color-white);
+        }
+
+        .btn-danger {
+            background: var(--color-danger);
+            color: var(--color-white);
+        }
+
+        /* Form Components */
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .form-label {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text);
+            margin-bottom: var(--space-xs);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            font-size: var(--font-size-md);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-md);
+            transition: var(--transition-base);
+            min-height: 44px;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(10, 15, 44, 0.1);
+        }
+
+        /* Alert Components */
+        .alert {
+            padding: var(--space-md);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .alert-success {
+            background: color-mix(in srgb, var(--color-success) 10%, white);
+            border: 1px solid color-mix(in srgb, var(--color-success) 30%, white);
+            color: var(--color-success);
+        }
+
+        .alert-danger {
+            background: color-mix(in srgb, var(--color-danger) 10%, white);
+            border: 1px solid color-mix(in srgb, var(--color-danger) 30%, white);
+            color: var(--color-danger);
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+        }
+
+        .color-sample {
+            height: 60px;
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: end;
+            padding: var(--space-xs);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-white);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>SportPro - Sistema de Design</h1>
+            <p>Demonstração do tema refatorado para WebView mobile</p>
+        </div>
+
+        <div class="demo-grid">
+            <!-- Login Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">SportPro</h2>
+                    <p class="card-subtitle">Faça login em sua conta</p>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label class="form-label">Login</label>
+                        <input type="text" class="form-input" placeholder="Digite seu login">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-input" placeholder="Digite sua senha">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;">Entrar</button>
+                </div>
+            </div>
+
+            <!-- Palette de Cores -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Palette de Cores</h2>
+                    <p class="card-subtitle">Cores do tema SportPro</p>
+                </div>
+                <div class="card-body">
+                    <div class="color-palette">
+                        <div class="color-sample" style="background: var(--color-primary);">Primary</div>
+                        <div class="color-sample" style="background: var(--color-secondary);">Secondary</div>
+                        <div class="color-sample" style="background: var(--color-accent);">Accent</div>
+                        <div class="color-sample" style="background: var(--color-success);">Success</div>
+                        <div class="color-sample" style="background: var(--color-warning);">Warning</div>
+                        <div class="color-sample" style="background: var(--color-danger);">Danger</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Componentes de Botão</h2>
+                    <p class="card-subtitle">Variações disponíveis</p>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-primary">Primário</button>
+                    <button class="btn btn-secondary">Secundário</button>
+                    <button class="btn btn-success">Sucesso</button>
+                    <button class="btn btn-danger">Perigo</button>
+                </div>
+            </div>
+
+            <!-- Alertas -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Componentes de Alerta</h2>
+                    <p class="card-subtitle">Feedback para usuário</p>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-success">✅ Operação realizada com sucesso!</div>
+                    <div class="alert alert-danger">❌ Erro ao processar solicitação.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

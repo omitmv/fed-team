@@ -1,4 +1,6 @@
 import React from 'react';
+import '../../../theme.css';
+import '../../../components.css';
 import '../styles/App.css';
 import { Login } from '../../auth';
 

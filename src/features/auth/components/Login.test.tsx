@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Login from './Login';
@@ -32,14 +32,17 @@ describe('Login Component', () => {
       render(<Login />);
 
       // Verifica se o título está presente
-      expect(screen.getByRole('heading', { name: /entrar no sistema/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /sportpro/i })).toBeInTheDocument();
+
+      // Verifica se o subtítulo está presente
+      expect(screen.getByText(/faça login em sua conta/i)).toBeInTheDocument();
 
       // Verifica se os campos de input estão presentes
       expect(screen.getByLabelText(/login/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/senha/i)).toBeInTheDocument();
 
-      // Verifica se o link de recuperar senha está presente
-      expect(screen.getByRole('button', { name: /recuperar senha/i })).toBeInTheDocument();
+      // Verifica se o link de esqueceu a senha está presente
+      expect(screen.getByRole('button', { name: /esqueceu a senha/i })).toBeInTheDocument();
 
       // Verifica se o botão de entrar está presente
       expect(screen.getByRole('button', { name: /entrar/i })).toBeInTheDocument();
@@ -138,11 +141,11 @@ describe('Login Component', () => {
     });
   });
 
-  describe('Funcionalidade de recuperar senha', () => {
-    test('deve chamar alert ao clicar em recuperar senha', async () => {
+  describe('Funcionalidade de esqueceu a senha', () => {
+    test('deve chamar alert ao clicar em esqueceu a senha', async () => {
       render(<Login />);
 
-      const forgotPasswordButton = screen.getByRole('button', { name: /recuperar senha/i });
+      const forgotPasswordButton = screen.getByRole('button', { name: /esqueceu a senha/i });
       await userEvent.click(forgotPasswordButton);
 
       expect(mockAlert).toHaveBeenCalledWith('Funcionalidade de recuperação de senha em desenvolvimento');
@@ -175,19 +178,18 @@ describe('Login Component', () => {
       });
 
       // Avança o timer para simular a conclusão da Promise
-      jest.advanceTimersByTime(1000);
+      await act(async () => {
+        jest.advanceTimersByTime(1000);
+      });
 
       // Espera a conclusão da operação assíncrona
       await waitFor(() => {
         expect(mockAlert).toHaveBeenCalledWith('Login realizado com sucesso!');
       });
 
-      // Verifica se o botão volta ao estado normal em testes separados
+      // Verifica se o botão volta ao estado normal
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /entrar/i })).toBeInTheDocument();
-      });
-
-      await waitFor(() => {
         expect(screen.getByRole('button', { name: /entrar/i })).toBeEnabled();
       });
     });
@@ -251,19 +253,18 @@ describe('Login Component', () => {
       await userEvent.click(submitButton);
 
       // Avança o timer
-      jest.advanceTimersByTime(1000);
+      await act(async () => {
+        jest.advanceTimersByTime(1000);
+      });
 
       // Espera a mensagem de erro aparecer
       await waitFor(() => {
         expect(screen.getByText(/erro ao realizar login/i)).toBeInTheDocument();
       });
 
-      // Verifica se o botão volta ao estado normal em testes separados
+      // Verifica se o botão volta ao estado normal
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /entrar/i })).toBeInTheDocument();
-      });
-
-      await waitFor(() => {
         expect(screen.getByRole('button', { name: /entrar/i })).toBeEnabled();
       });
     });
@@ -288,7 +289,9 @@ describe('Login Component', () => {
 
       // Primeira submissão (com erro)
       await userEvent.click(submitButton);
-      jest.advanceTimersByTime(1000);
+      await act(async () => {
+        jest.advanceTimersByTime(1000);
+      });
 
       // Espera erro aparecer
       await waitFor(() => {
@@ -377,10 +380,10 @@ describe('Login Component', () => {
       render(<Login />);
 
       // Verifica se os elementos principais estão presentes usando métodos do Testing Library
-      expect(screen.getByRole('heading', { name: /entrar no sistema/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /sportpro/i })).toBeInTheDocument();
       expect(screen.getByLabelText(/login/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/senha/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /recuperar senha/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /esqueceu a senha/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /entrar/i })).toBeInTheDocument();
     });
 
@@ -399,7 +402,9 @@ describe('Login Component', () => {
       await userEvent.type(senhaInput, 'senha123');
       await userEvent.click(screen.getByRole('button', { name: /entrar/i }));
 
-      jest.advanceTimersByTime(1000);
+      await act(async () => {
+        jest.advanceTimersByTime(1000);
+      });
 
       await waitFor(() => {
         expect(screen.getByText(/erro ao realizar login/i)).toBeInTheDocument();
