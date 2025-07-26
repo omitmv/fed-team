@@ -47,11 +47,6 @@ const Login: React.FC = () => {
   return (
     <div className="container-center">
       <div className="card">
-        <div className="card-header">
-          <h1 className="card-title">SportPro</h1>
-          <p className="card-subtitle">Faça login em sua conta</p>
-        </div>
-        
         <div className="card-body">
           {error && (
             <div className="alert alert-danger">

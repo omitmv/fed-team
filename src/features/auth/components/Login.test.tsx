@@ -31,12 +31,6 @@ describe('Login Component', () => {
     test('deve renderizar todos os elementos do formulário', () => {
       render(<Login />);
 
-      // Verifica se o título está presente
-      expect(screen.getByRole('heading', { name: /sportpro/i })).toBeInTheDocument();
-
-      // Verifica se o subtítulo está presente
-      expect(screen.getByText(/faça login em sua conta/i)).toBeInTheDocument();
-
       // Verifica se os campos de input estão presentes
       expect(screen.getByLabelText(/login/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/senha/i)).toBeInTheDocument();
@@ -380,7 +374,6 @@ describe('Login Component', () => {
       render(<Login />);
 
       // Verifica se os elementos principais estão presentes usando métodos do Testing Library
-      expect(screen.getByRole('heading', { name: /sportpro/i })).toBeInTheDocument();
       expect(screen.getByLabelText(/login/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/senha/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /recuperar senha/i })).toBeInTheDocument();
