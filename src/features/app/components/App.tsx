@@ -1,8 +1,13 @@
 import React from 'react';
 import '../styles/App.css';
 import { UsuarioList } from '../../usuario';
+// Para usar o componente de login, descomente a linha abaixo:
+// import { Login } from '../../auth';
 
 function App() {
+  // Para usar a tela de login, substitua o conteúdo do return por:
+  // return <Login />;
+  
   return (
     <div className="App">
       <header className="App-header">
