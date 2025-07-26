@@ -1,0 +1,215 @@
+/* Overlay da notificação */
+.notification-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: var(--spacing-md);
+  animation: notification-fade-in 0.3s ease-out;
+}
+
+/* Container principal da notificação */
+.notification-container {
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  max-width: 400px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: notification-slide-up 0.3s ease-out;
+}
+
+/* Conteúdo da notificação */
+.notification-content {
+  padding: var(--spacing-xl);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+/* Container da imagem */
+.notification-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+/* Ícone da notificação */
+.notification-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+/* Ícone de sucesso */
+.notification-icon--success {
+  filter: brightness(1.1) saturate(1.2);
+}
+
+/* Ícone de erro */
+.notification-icon--error {
+  filter: brightness(1.1) saturate(1.2);
+}
+
+/* Título da notificação */
+.notification-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Título de sucesso */
+.notification-title--success {
+  color: var(--color-success, #28a745);
+}
+
+/* Título de erro */
+.notification-title--error {
+  color: var(--color-danger, #dc3545);
+}
+
+/* Mensagem da notificação */
+.notification-message {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary, #6c757d);
+  margin: 0;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+/* Container das ações */
+.notification-actions {
+  width: 100%;
+  margin-top: var(--spacing-md);
+}
+
+/* Botão da notificação */
+.notification-button {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: var(--spacing-md) var(--spacing-xl);
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 48px;
+}
+
+/* Botão de sucesso */
+.notification-button--success {
+  background-color: var(--color-success, #28a745);
+  color: var(--color-white);
+}
+
+.notification-button--success:hover {
+  background-color: var(--color-success-dark, #218838);
+  transform: translateY(-1px);
+}
+
+.notification-button--success:active {
+  transform: translateY(0);
+}
+
+/* Botão de erro */
+.notification-button--error {
+  background-color: var(--color-danger, #dc3545);
+  color: var(--color-white);
+}
+
+.notification-button--error:hover {
+  background-color: var(--color-danger-dark, #c82333);
+  transform: translateY(-1px);
+}
+
+.notification-button--error:active {
+  transform: translateY(0);
+}
+
+/* Animações */
+@keyframes notification-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes notification-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .notification-overlay {
+    padding: var(--spacing-sm);
+  }
+  
+  .notification-content {
+    padding: var(--spacing-lg);
+    gap: var(--spacing-md);
+  }
+  
+  .notification-icon {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .notification-title {
+    font-size: 1.25rem;
+  }
+  
+  .notification-message {
+    font-size: 0.9rem;
+  }
+}
+
+/* Acessibilidade - modo escuro */
+@media (prefers-color-scheme: dark) {
+  .notification-container {
+    background: var(--color-background-dark, #2d3748);
+    color: var(--color-text-dark, #e2e8f0);
+  }
+  
+  .notification-message {
+    color: var(--color-text-secondary-dark, #a0aec0);
+  }
+}
+
+/* Foco para acessibilidade */
+.notification-button:focus {
+  outline: 2px solid var(--color-primary, #007bff);
+  outline-offset: 2px;
+}
+
+/* Estados de loading (caso necessário no futuro) */
+.notification-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.notification-button:disabled:hover {
+  transform: none;
+}

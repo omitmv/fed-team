@@ -166,7 +166,7 @@ describe('Login Component', () => {
       expect(screen.getByRole('button', { name: /entrando.../i })).toBeDisabled();
 
       // Verifica se os dados foram logados
-      expect(mockConsoleLog).toHaveBeenCalledWith('Dados de login:', {
+      expect(mockConsoleLog).toHaveBeenCalledWith('Enviando dados de login:', {
         login: 'usuario123',
         senha: 'senha123'
       });
@@ -209,7 +209,7 @@ describe('Login Component', () => {
       expect(screen.getByRole('button', { name: /entrando.../i })).toBeInTheDocument();
 
       // Verifica se os dados foram logados
-      expect(mockConsoleLog).toHaveBeenCalledWith('Dados de login:', {
+      expect(mockConsoleLog).toHaveBeenCalledWith('Enviando dados de login:', {
         login: 'usuario123',
         senha: 'senha123'
       });

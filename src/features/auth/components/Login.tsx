@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { LoginCredentials } from '../types';
+import { api } from '../../../services/api';
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState<LoginCredentials>({
@@ -24,16 +25,48 @@ const Login: React.FC = () => {
     setError(null);
 
     try {
-      // Aqui você pode implementar a lógica de autenticação
-      console.log('Dados de login:', formData);
+      // Chamada para o endpoint de login
+      console.log('Enviando dados de login:', formData);
       
-      // Simular chamada de API
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await api.post('/v1/usuarios/login', {
+        login: formData.login,
+        senha: formData.senha
+      });
       
-      // TODO: Implementar autenticação real
+      console.log('Resposta do servidor:', response?.data || 'Sem dados na resposta');
+      console.log('Status da resposta:', response?.status || 'Status indefinido');
+      console.log('Headers da resposta:', response?.headers || 'Headers indefinidos');
+      
+      // TODO: Implementar tratamento da resposta (salvar token, redirecionar, etc.)
       alert('Login realizado com sucesso!');
-    } catch (err) {
-      setError('Erro ao realizar login. Verifique suas credenciais.');
+    } catch (err: any) {
+      console.error('Erro na chamada de login:', err);
+      
+      if (err.response) {
+        // Erro com resposta do servidor
+        console.error('Dados do erro:', err.response.data);
+        console.error('Status do erro:', err.response.status);
+        console.error('Headers do erro:', err.response.headers);
+        
+        // Personalizar mensagem baseada no status
+        if (err.response.status === 401) {
+          setError('Credenciais inválidas. Verifique seu login e senha.');
+        } else if (err.response.status === 404) {
+          setError('Serviço de login não encontrado.');
+        } else if (err.response.status >= 500) {
+          setError('Erro interno do servidor. Tente novamente mais tarde.');
+        } else {
+          setError('Erro ao realizar login. Verifique suas credenciais.');
+        }
+      } else if (err.request) {
+        // Erro de conexão
+        console.error('Erro de conexão:', err.request);
+        setError('Erro de conexão. Verifique sua internet.');
+      } else {
+        // Erro de configuração
+        console.error('Erro de configuração:', err.message);
+        setError('Erro ao realizar login. Tente novamente.');
+      }
     } finally {
       setLoading(false);
     }
