@@ -98,9 +98,9 @@ const Login: React.FC = () => {
               <button
                 type="button"
                 onClick={handleForgotPassword}
-                className="btn btn-ghost btn-sm"
+                className="link-secondary"
               >
-                Esqueceu a senha?
+                Recuperar senha
               </button>
             </div>
 

@@ -41,8 +41,8 @@ describe('Login Component', () => {
       expect(screen.getByLabelText(/login/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/senha/i)).toBeInTheDocument();
 
-      // Verifica se o link de esqueceu a senha está presente
-      expect(screen.getByRole('button', { name: /esqueceu a senha/i })).toBeInTheDocument();
+      // Verifica se o link de recuperar senha está presente
+      expect(screen.getByRole('button', { name: /recuperar senha/i })).toBeInTheDocument();
 
       // Verifica se o botão de entrar está presente
       expect(screen.getByRole('button', { name: /entrar/i })).toBeInTheDocument();
@@ -141,11 +141,11 @@ describe('Login Component', () => {
     });
   });
 
-  describe('Funcionalidade de esqueceu a senha', () => {
-    test('deve chamar alert ao clicar em esqueceu a senha', async () => {
+  describe('Funcionalidade de recuperar senha', () => {
+    test('deve chamar alert ao clicar em recuperar senha', async () => {
       render(<Login />);
 
-      const forgotPasswordButton = screen.getByRole('button', { name: /esqueceu a senha/i });
+      const forgotPasswordButton = screen.getByRole('button', { name: /recuperar senha/i });
       await userEvent.click(forgotPasswordButton);
 
       expect(mockAlert).toHaveBeenCalledWith('Funcionalidade de recuperação de senha em desenvolvimento');
@@ -383,7 +383,7 @@ describe('Login Component', () => {
       expect(screen.getByRole('heading', { name: /sportpro/i })).toBeInTheDocument();
       expect(screen.getByLabelText(/login/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/senha/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /esqueceu a senha/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /recuperar senha/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /entrar/i })).toBeInTheDocument();
     });
 

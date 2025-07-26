@@ -392,3 +392,65 @@
     font-size: var(--font-size-xl);
   }
 }
+
+/* ======= LINKS ======= */
+
+.link-primary {
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-xs) 0;
+  transition: all var(--transition-fast);
+  display: inline;
+  font-family: inherit;
+}
+
+.link-primary:hover {
+  color: var(--color-primary-hover);
+  text-decoration: none;
+  background: transparent;
+}
+
+.link-secondary {
+  background: transparent;
+  border: none;
+  color: var(--color-secondary);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-xs) 0;
+  transition: all var(--transition-fast);
+  display: inline;
+  font-family: inherit;
+}
+
+.link-secondary:hover {
+  color: var(--color-secondary-hover);
+  text-decoration: none;
+  background: transparent;
+}
+
+.link-muted {
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  padding: var(--spacing-xs) 0;
+  transition: all var(--transition-fast);
+  display: inline;
+  font-family: inherit;
+}
+
+.link-muted:hover {
+  color: var(--color-text-primary);
+  text-decoration: none;
+  background: transparent;
+}
