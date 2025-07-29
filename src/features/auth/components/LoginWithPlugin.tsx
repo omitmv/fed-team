@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { LoginCredentials } from '../types';
 import { api } from '../../../services/api';
+import { usePlugin } from '../../../hooks/usePlugin';
+import './PluginStatus.css';
 
-const Login: React.FC = () => {
+const LoginWithPlugin: React.FC = () => {
   const [formData, setFormData] = useState<LoginCredentials>({
     login: '',
     senha: '',
@@ -10,6 +12,9 @@ const Login: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Hook do plugin para conectar após login
+  const { connect: connectPlugin, isConnected: pluginConnected } = usePlugin();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,15 +32,26 @@ const Login: React.FC = () => {
     try {
       // Chamada para o endpoint de login
       console.log('Enviando dados de login:', formData);
-      const response = await api.post('/v1/usuario/login', {
+      const response = await api.post('/v1/usuarios/login', {
         login: formData.login,
         senha: formData.senha
       });
       
       const { token } = response.data;
       localStorage.setItem('token', token);
-      // TODO: Implementar tratamento da resposta (salvar token, redirecionar, etc.)
-      alert('Login realizado com sucesso!');
+      
+      // ✅ NOVA FUNCIONALIDADE: Conectar ao plugin após login bem-sucedido
+      try {
+        console.log('🔌 Tentando conectar ao plugin...');
+        await connectPlugin();
+        console.log('✅ Plugin conectado com sucesso!');
+        
+        alert(`Login realizado com sucesso!\nPlugin: ${pluginConnected ? 'Conectado' : 'Desconectado'}`);
+      } catch (pluginError) {
+        console.warn('⚠️ Erro ao conectar plugin (login ainda foi bem-sucedido):', pluginError);
+        alert('Login realizado com sucesso!\nAviso: Plugin não pôde ser conectado.');
+      }
+      
     } catch (err: any) {
       console.error('Erro na chamada de login:', err);
       
@@ -78,6 +94,14 @@ const Login: React.FC = () => {
     <div className="container-center">
       <div className="card login-card">
         <div className="card-body">
+          {/* Indicador de status do plugin */}
+          <div className="plugin-status-indicator">
+            <span className={`status-dot ${pluginConnected ? 'connected' : 'disconnected'}`}></span>
+            <span className="status-text">
+              Plugin: {pluginConnected ? 'Conectado' : 'Desconectado'}
+            </span>
+          </div>
+
           {error && (
             <div className="alert alert-danger">
               {error}
@@ -143,4 +167,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default LoginWithPlugin;

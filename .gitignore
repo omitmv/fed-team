@@ -163,3 +163,7 @@ yarn-error.log*
 
 # Scriipt Copilot
 .scripts/
+
+# VS Code settings
+.vscode/
+*.code-workspace

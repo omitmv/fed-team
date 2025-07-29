@@ -3,9 +3,22 @@ import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Login from './Login';
+import { api } from '../../../services/api';
+
+// Mock da API
+jest.mock('../../../services/api', () => ({
+  api: {
+    post: jest.fn(),
+  },
+}));
+
+const mockApi = api as jest.Mocked<typeof api>;
 
 // Mock do console.log para verificar se os dados são logados
 const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
+
+// Mock do console.error para verificar se erros são logados
+const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
 
 // Mock do alert para verificar se é chamado
 const mockAlert = jest.spyOn(window, 'alert').mockImplementation(() => {});
@@ -15,6 +28,17 @@ describe('Login Component', () => {
     jest.clearAllMocks();
     jest.clearAllTimers();
     jest.useFakeTimers();
+    
+    // Setup padrão da API mock para sucesso
+    mockApi.post.mockResolvedValue({
+      data: { token: 'fake-token' },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {
+        headers: {} as any,
+      },
+    } as any);
   });
 
   afterEach(() => {
@@ -24,6 +48,7 @@ describe('Login Component', () => {
 
   afterAll(() => {
     mockConsoleLog.mockRestore();
+    mockConsoleError.mockRestore();
     mockAlert.mockRestore();
   });
 
@@ -184,6 +209,9 @@ describe('Login Component', () => {
       // Verifica se o botão volta ao estado normal
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /entrar/i })).toBeInTheDocument();
+      });
+      
+      await waitFor(() => {
         expect(screen.getByRole('button', { name: /entrar/i })).toBeEnabled();
       });
     });
@@ -228,10 +256,8 @@ describe('Login Component', () => {
     });
 
     test('deve lidar com erro durante submissão', async () => {
-      // Mock do console.log para rejeitar na próxima chamada
-      mockConsoleLog.mockImplementationOnce(() => {
-        throw new Error('Erro simulado');
-      });
+      // Mock da API para rejeitar
+      mockApi.post.mockRejectedValueOnce(new Error('Erro simulado'));
 
       render(<Login />);
 
@@ -246,11 +272,6 @@ describe('Login Component', () => {
       // Submete o formulário
       await userEvent.click(submitButton);
 
-      // Avança o timer
-      await act(async () => {
-        jest.advanceTimersByTime(1000);
-      });
-
       // Espera a mensagem de erro aparecer
       await waitFor(() => {
         expect(screen.getByText(/erro ao realizar login/i)).toBeInTheDocument();
@@ -259,17 +280,24 @@ describe('Login Component', () => {
       // Verifica se o botão volta ao estado normal
       await waitFor(() => {
         expect(screen.getByRole('button', { name: /entrar/i })).toBeInTheDocument();
+      });
+      
+      await waitFor(() => {
         expect(screen.getByRole('button', { name: /entrar/i })).toBeEnabled();
       });
     });
 
     test('deve limpar erro ao tentar submeter novamente', async () => {
-      // Mock do console.log para rejeitar na primeira chamada
-      mockConsoleLog
-        .mockImplementationOnce(() => {
-          throw new Error('Erro simulado');
-        })
-        .mockImplementationOnce(() => {}); // Segunda chamada normal
+      // Mock da API para rejeitar na primeira chamada e succeeder na segunda
+      mockApi.post
+        .mockRejectedValueOnce(new Error('Erro simulado'))
+        .mockResolvedValueOnce({
+          data: { token: 'fake-token' },
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config: { headers: {} as any },
+        } as any);
 
       render(<Login />);
 
@@ -283,9 +311,6 @@ describe('Login Component', () => {
 
       // Primeira submissão (com erro)
       await userEvent.click(submitButton);
-      await act(async () => {
-        jest.advanceTimersByTime(1000);
-      });
 
       // Espera erro aparecer
       await waitFor(() => {
@@ -300,7 +325,9 @@ describe('Login Component', () => {
       await userEvent.click(submitButton);
 
       // Verifica se o erro foi limpo
-      expect(screen.queryByText(/erro ao realizar login/i)).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryByText(/erro ao realizar login/i)).not.toBeInTheDocument();
+      });
     });
   });
 
