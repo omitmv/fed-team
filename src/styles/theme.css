@@ -19,6 +19,12 @@
   --color-warning: #FFC107;
   --color-info: var(--color-secondary);
   
+  /* Backgrounds de feedback */
+  --color-primary-bg: rgba(255, 107, 0, 0.1);
+  --color-error-bg: rgba(220, 53, 69, 0.1);
+  --color-success-bg: rgba(40, 167, 69, 0.1);
+  --color-warning-bg: rgba(255, 193, 7, 0.1);
+  
   /* Transparências */
   --color-overlay: rgba(10, 15, 44, 0.9);
   --color-surface: rgba(255, 255, 255, 0.05);

@@ -497,3 +497,290 @@
     padding: var(--spacing-sm);
   }
 }
+
+/* ======= NAVIGATION DRAWER ======= */
+
+/* Hamburger menu button */
+.hamburger-btn {
+  position: fixed !important;
+  top: 16px;
+  left: 16px;
+  z-index: 1001 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 200ms ease;
+  box-shadow: var(--shadow-lg);
+  -webkit-tap-highlight-color: transparent;
+  /* Força o elemento para frente */
+  transform: translateZ(0);
+}
+
+.hamburger-btn:hover {
+  background: var(--color-primary-hover);
+  box-shadow: var(--shadow-xl);
+  transform: translateZ(0) scale(1.05);
+}
+
+.hamburger-btn:active {
+  transform: translateZ(0) scale(0.95);
+}
+
+/* Hamburger icon */
+.hamburger-icon {
+  width: 24px;
+  height: 18px;
+  position: relative;
+  transform: rotate(0deg);
+  transition: 250ms ease-in-out;
+}
+
+.hamburger-icon span {
+  display: block;
+  position: absolute;
+  height: 3px;
+  width: 100%;
+  background: white;
+  border-radius: 3px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: 250ms ease-in-out;
+}
+
+.hamburger-icon span:nth-child(1) {
+  top: 0px;
+}
+
+.hamburger-icon span:nth-child(2) {
+  top: 7px;
+}
+
+.hamburger-icon span:nth-child(3) {
+  top: 14px;
+}
+
+/* Hamburger animation when open */
+.hamburger-icon.open span:nth-child(1) {
+  top: 7px;
+  transform: rotate(135deg);
+}
+
+.hamburger-icon.open span:nth-child(2) {
+  opacity: 0;
+  left: -60px;
+}
+
+.hamburger-icon.open span:nth-child(3) {
+  top: 7px;
+  transform: rotate(-135deg);
+}
+
+/* Overlay */
+.drawer-overlay {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999 !important;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 250ms ease;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  /* Garante que o overlay esteja em uma camada própria */
+  transform: translateZ(0);
+  pointer-events: none;
+}
+
+.drawer-overlay.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Drawer container */
+.drawer {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: min(90vw, 320px);
+  height: 100vh;
+  background: var(--color-background);
+  z-index: 1000 !important;
+  transition: transform 250ms ease;
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Garante que o drawer esteja em uma camada própria e fechado por padrão */
+  transform: translateX(-100%) translateZ(0);
+}
+
+.drawer.open {
+  transform: translateX(0) translateZ(0);
+}
+
+/* Drawer header */
+.drawer-header {
+  padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.drawer-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* Drawer content */
+.drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-md) 0;
+}
+
+/* Navigation menu */
+.drawer-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.drawer-menu-item {
+  margin: 0;
+}
+
+.drawer-menu-link {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-lg);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  transition: all 200ms ease;
+  min-height: 48px;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.drawer-menu-link:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-primary);
+}
+
+.drawer-menu-link.active {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  border-right: 3px solid var(--color-primary);
+}
+
+.drawer-menu-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--color-primary);
+}
+
+/* Drawer footer */
+.drawer-footer {
+  padding: var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.user-name {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
+.btn-logout {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all 200ms ease;
+  min-height: 36px;
+  width: 100%;
+}
+
+.btn-logout:hover {
+  background: var(--color-error-bg);
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.auth-status {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: var(--spacing-md);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .drawer {
+    width: min(85vw, 280px);
+  }
+}
+
+@media (max-width: 480px) {
+  .drawer {
+    width: 90vw;
+  }
+  
+  .hamburger-btn {
+    top: 12px;
+    left: 12px;
+  }
+}
+
+/* Animation performance optimization */
+.drawer-overlay,
+.hamburger-btn,
+.hamburger-icon,
+.hamburger-icon span {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Drawer tem seu próprio transform específico */
+.drawer {
+  will-change: transform, opacity;
+}
+
+/* Focus states for accessibility */
+.drawer-menu-link:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.hamburger-btn:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Debug Drawer - Fed Team</title>
+    <script>
+      // Teste simples para verificar se os elementos são clicáveis
+      window.addEventListener('load', function () {
+        console.log('Página carregada, testando drawer...')
+
+        // Verificar se o botão hamburger existe
+        const hamburgerBtn = document.querySelector('.hamburger-btn')
+        if (hamburgerBtn) {
+          console.log('✅ Botão hamburger encontrado')
+          hamburgerBtn.addEventListener('click', function () {
+            console.log('🖱️ Clique no botão hamburger detectado')
+          })
+        } else {
+          console.log('❌ Botão hamburger NÃO encontrado')
+        }
+
+        // Verificar se o overlay existe
+        const overlay = document.querySelector('.drawer-overlay')
+        if (overlay) {
+          console.log('✅ Overlay encontrado')
+          overlay.addEventListener('click', function () {
+            console.log('🖱️ Clique no overlay detectado')
+          })
+        } else {
+          console.log('❌ Overlay NÃO encontrado')
+        }
+
+        // Verificar se o drawer existe
+        const drawer = document.querySelector('.drawer')
+        if (drawer) {
+          console.log('✅ Drawer encontrado')
+        } else {
+          console.log('❌ Drawer NÃO encontrado')
+        }
+
+        // Verificar state do React (se disponível)
+        setTimeout(() => {
+          const hamburgerBtn = document.querySelector('.hamburger-btn')
+          if (hamburgerBtn) {
+            const isExpanded = hamburgerBtn.getAttribute('aria-expanded')
+            console.log('🔍 Estado aria-expanded:', isExpanded)
+          }
+
+          const drawer = document.querySelector('.drawer')
+          if (drawer) {
+            const hasOpenClass = drawer.classList.contains('open')
+            console.log('🔍 Drawer tem classe "open":', hasOpenClass)
+          }
+        }, 1000)
+      })
+    </script>
+  </head>
+  <body>
+    <h1>Debug - Vá para http://localhost:3000 e abra o console do navegador</h1>
+    <p>Este arquivo injetará scripts de debug na página principal.</p>
+    <script>
+      // Redirecionar após 3 segundos
+      setTimeout(() => {
+        window.location.href = 'http://localhost:3000'
+      }, 3000)
+    </script>
+  </body>
+</html>

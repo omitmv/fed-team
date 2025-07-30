@@ -1,46 +1,46 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useAppContext } from '../context';
 import '../styles/components.css';
 
-interface NavigationProps {
+interface NavigationTestProps {
   className?: string;
 }
 
-export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
-  const { state, logout } = useAppContext();
-  // Força o drawer a sempre iniciar fechado
+export const NavigationTest: React.FC<NavigationTestProps> = ({ className = '' }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  
-  // Garante que o drawer sempre inicie fechado após a montagem
+
+  // Debug: Monitor state changes
   useEffect(() => {
-    setIsDrawerOpen(false);
-    // Limpa qualquer estado de scroll bloqueado
-    document.body.style.overflow = '';
+    console.log('🔄 Estado do drawer alterado:', isDrawerOpen);
+  }, [isDrawerOpen]);
+
+  const toggleDrawer = useCallback(() => {
+    console.log('🔄 toggleDrawer chamado');
+    setIsDrawerOpen(prev => {
+      console.log('📱 Alterando estado de', prev, 'para', !prev);
+      return !prev;
+    });
   }, []);
-
-  const handleLogout = () => {
-    logout();
-    setIsDrawerOpen(false);
-  };
-
-  const toggleDrawer = () => {
-    setIsDrawerOpen(prev => !prev);
-  };
 
   const closeDrawer = useCallback(() => {
+    console.log('❌ closeDrawer chamado');
     setIsDrawerOpen(false);
   }, []);
 
-  const handleMenuItemClick = () => {
+  const handleMenuItemClick = useCallback(() => {
+    console.log('🔗 handleMenuItemClick chamado');
     setIsDrawerOpen(false);
-  };
+  }, []);
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDrawerOpen(false);
-  };
+  const handleOverlayClick = useCallback((e: React.MouseEvent) => {
+    console.log('🖱️ handleOverlayClick chamado', e.target, e.currentTarget);
+    if (e.target === e.currentTarget) {
+      console.log('✅ Clique válido no overlay, fechando drawer');
+      closeDrawer();
+    } else {
+      console.log('❌ Clique inválido no overlay (propagação)');
+    }
+  }, [closeDrawer]);
 
   // Handle escape key to close drawer
   useEffect(() => {
@@ -52,7 +52,6 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
 
     if (isDrawerOpen) {
       document.addEventListener('keydown', handleEscape);
-      // Prevent body scroll when drawer is open
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -65,13 +64,28 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
   }, [isDrawerOpen, closeDrawer]);
 
   return (
-    <>
+    <div style={{ position: 'relative', width: '100%', height: '100vh' }}>
+      {/* Debug info */}
+      <div style={{ 
+        position: 'fixed', 
+        top: '70px', 
+        left: '10px', 
+        zIndex: 2000, 
+        background: 'white', 
+        padding: '10px',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        fontSize: '12px'
+      }}>
+        Estado: {isDrawerOpen ? 'ABERTO' : 'FECHADO'}
+      </div>
+
       {/* Hamburger Menu Button */}
       <button 
         className="hamburger-btn"
         onClick={toggleDrawer}
         aria-label={isDrawerOpen ? 'Fechar menu' : 'Abrir menu'}
-        aria-expanded={isDrawerOpen}
+        style={{ zIndex: 1001 }}
       >
         <div className={`hamburger-icon ${isDrawerOpen ? 'open' : ''}`}>
           <span></span>
@@ -84,6 +98,7 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
       <div 
         className={`drawer-overlay ${isDrawerOpen ? 'open' : ''}`}
         onClick={handleOverlayClick}
+        style={{ zIndex: 999 }}
       />
 
       {/* Drawer */}
@@ -91,10 +106,11 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
         className={`drawer ${isDrawerOpen ? 'open' : ''} ${className}`}
         role="navigation"
         aria-label="Menu principal"
+        style={{ zIndex: 1000 }}
       >
         {/* Drawer Header */}
         <div className="drawer-header">
-          <h1 className="drawer-title">Fed Team</h1>
+          <h1 className="drawer-title">Fed Team (Test)</h1>
         </div>
 
         {/* Drawer Content */}
@@ -114,6 +130,17 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
             </li>
             <li className="drawer-menu-item">
               <NavLink 
+                to="/test" 
+                className={({ isActive }) => 
+                  `drawer-menu-link ${isActive ? 'active' : ''}`
+                }
+                onClick={handleMenuItemClick}
+              >
+                Test Page
+              </NavLink>
+            </li>
+            <li className="drawer-menu-item">
+              <NavLink 
                 to="/auth" 
                 className={({ isActive }) => 
                   `drawer-menu-link ${isActive ? 'active' : ''}`
@@ -124,56 +151,32 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
               </NavLink>
             </li>
             <li className="drawer-menu-item">
-              <NavLink 
-                to="/usuarios" 
-                className={({ isActive }) => 
-                  `drawer-menu-link ${isActive ? 'active' : ''}`
-                }
-                onClick={handleMenuItemClick}
+              <button 
+                onClick={closeDrawer}
+                style={{
+                  background: 'red',
+                  color: 'white',
+                  border: 'none',
+                  padding: '10px',
+                  width: '100%',
+                  cursor: 'pointer'
+                }}
               >
-                Usuários
-              </NavLink>
-            </li>
-            <li className="drawer-menu-item">
-              <NavLink 
-                to="/plugins" 
-                className={({ isActive }) => 
-                  `drawer-menu-link ${isActive ? 'active' : ''}`
-                }
-                onClick={handleMenuItemClick}
-              >
-                Plugins
-              </NavLink>
+                Fechar (Teste Direto)
+              </button>
             </li>
           </ul>
         </div>
 
         {/* Drawer Footer */}
         <div className="drawer-footer">
-          {state.isAuthenticated && state.currentUser ? (
-            <div className="user-info">
-              <div>
-                <p className="user-name">
-                  Olá, {state.currentUser.nome || 'Usuário'}
-                </p>
-              </div>
-              <button 
-                className="btn-logout"
-                onClick={handleLogout}
-                aria-label="Fazer logout"
-              >
-                Sair
-              </button>
-            </div>
-          ) : (
-            <div className="auth-status">
-              <span>Não autenticado</span>
-            </div>
-          )}
+          <div className="auth-status">
+            <span>Componente de teste</span>
+          </div>
         </div>
       </nav>
-    </>
+    </div>
   );
 };
 
-export default Navigation;
+export default NavigationTest;
