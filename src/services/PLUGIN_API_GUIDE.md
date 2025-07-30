@@ -326,7 +326,7 @@ const Login: React.FC = () => {
     // ... lógica de login existente ...
 
     try {
-      const response = await api.post('/v1/usuarios/login', {
+      const response = await api.post('/v1/usuario/login', {
         login: formData.login,
         senha: formData.senha
       })

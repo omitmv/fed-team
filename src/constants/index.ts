@@ -1,7 +1,7 @@
 // Constantes de configuração da aplicação
 
 export const API_CONFIG = {
-  BASE_URL: process.env.REACT_APP_API_BASE_URL || 'http://192.168.50.174:8080',
+  BASE_URL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080',
   TIMEOUT: parseInt(process.env.REACT_APP_API_TIMEOUT || '5000'),
   RETRY_ATTEMPTS: 3,
   RETRY_DELAY: 1000,
@@ -15,8 +15,8 @@ export const APP_CONFIG = {
 
 export const ENDPOINTS = {
   // Endpoints para usuários seguindo a especificação da API
-  USUARIOS: '/v1/usuarios',
-  USUARIO_BY_ID: (id: number) => `/v1/usuarios/${id}`,
+  USUARIOS: '/v1/usuario',
+  USUARIO_BY_ID: (id: number) => `/v1/usuario/${id}`,
   
   // Endpoints legados (manter para compatibilidade se necessário)
   USERS: '/users',

@@ -84,24 +84,24 @@ O projeto está configurado para consumir uma API REST com os seguintes endpoint
 
 ### Endpoints Utilizados
 
-- `GET /v1/usuarios` - Lista todos os usuários
-- `GET /v1/usuarios/{id}` - Busca usuário por ID
-- `POST /v1/usuarios` - Cria novo usuário
-- `PUT /v1/usuarios/{id}` - Atualiza usuário
-- `DELETE /v1/usuarios/{id}` - Remove usuário
+- `GET /v1/usuario` - Lista todos os usuários
+- `GET /v1/usuario/{id}` - Busca usuário por ID
+- `POST /v1/usuario` - Cria novo usuário
+- `PUT /v1/usuario/{id}` - Atualiza usuário
+- `DELETE /v1/usuario/{id}` - Remove usuário
 
 ### Modelo de Dados - Usuario
 
 ```typescript
 interface Usuario {
-  cdUsuario: number;      // Código único do usuário
-  login: string;          // Login (max 250 caracteres)
-  senha: string;          // Senha criptografada
-  nome: string;           // Nome completo (max 250 caracteres)
-  email: string;          // Email (max 250 caracteres)
-  dataCadastro: string;   // Data de cadastro (ISO string)
-  flAtivo: boolean;       // Flag de usuário ativo
-  dtExpiracao?: string;   // Data de expiração (opcional)
+  cdUsuario: number // Código único do usuário
+  login: string // Login (max 250 caracteres)
+  senha: string // Senha criptografada
+  nome: string // Nome completo (max 250 caracteres)
+  email: string // Email (max 250 caracteres)
+  dataCadastro: string // Data de cadastro (ISO string)
+  flAtivo: boolean // Flag de usuário ativo
+  dtExpiracao?: string // Data de expiração (opcional)
 }
 ```
 
@@ -110,28 +110,30 @@ interface Usuario {
 **IMPORTANTE**: A criptografia de senhas é realizada no **backend/API**, não no frontend.
 
 O frontend:
+
 - Envia senhas em **texto plano** através de HTTPS
 - Valida a força da senha antes do envio
 - Não possui lógica de criptografia
 
 O backend implementa o padrão:
+
 1. **Base64**: Converte a senha para Base64
 2. **MD5**: Aplica hash MD5 no resultado do Base64
 
 ```typescript
 // Exemplo no frontend - apenas validação
-const validacao = PasswordCrypto.validatePasswordStrength("MinhaSenh@123");
+const validacao = PasswordCrypto.validatePasswordStrength('MinhaSenh@123')
 if (!validacao.isValid) {
-  console.log("Senha não atende aos critérios:", validacao.errors);
+  console.log('Senha não atende aos critérios:', validacao.errors)
 }
 
 // A senha é enviada em texto plano para a API
 const novoUsuario = {
-  login: "usuario",
-  senha: "MinhaSenh@123", // Texto plano - API fará a criptografia
-  nome: "Nome do Usuário",
-  email: "email@exemplo.com"
-};
+  login: 'usuario',
+  senha: 'MinhaSenh@123', // Texto plano - API fará a criptografia
+  nome: 'Nome do Usuário',
+  email: 'email@exemplo.com'
+}
 ```
 
 ## 🎨 Interface do Usuário
@@ -176,11 +178,13 @@ const novoUsuario = {
 ## 🚦 Estados da Aplicação
 
 ### Loading States
+
 - Lista de usuários carregando
 - Operações CRUD em andamento
 - Botões desabilitados durante operações
 
 ### Error States
+
 - Erros de rede
 - Erros de validação
 - Timeouts de requisição
@@ -197,6 +201,7 @@ O projeto é totalmente responsivo com breakpoints:
 ## 🔍 Validações
 
 ### Validações de Formulário
+
 - Login: obrigatório, máximo 250 caracteres
 - Senha: obrigatória na criação, opcional na edição
 - Nome: obrigatório, máximo 250 caracteres
@@ -204,6 +209,7 @@ O projeto é totalmente responsivo com breakpoints:
 - Data de Expiração: formato de data válido
 
 ### Validações de Senha
+
 - Mínimo 6 caracteres
 - Máximo 250 caracteres
 - Pelo menos uma letra minúscula

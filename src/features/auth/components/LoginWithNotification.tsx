@@ -27,7 +27,7 @@ const LoginWithNotification: React.FC = () => {
     try {
       console.log('Enviando dados de login:', formData);
       
-      const response = await api.post('/v1/usuarios/login', {
+      const response = await api.post('/v1/usuario/login', {
         login: formData.login,
         senha: formData.senha
       });

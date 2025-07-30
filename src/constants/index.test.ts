@@ -3,17 +3,17 @@ import { ENDPOINTS, HTTP_STATUS, ERROR_MESSAGES, API_CONFIG } from './index';
 describe('Constants', () => {
   describe('ENDPOINTS', () => {
     test('should have correct USUARIOS endpoint', () => {
-      expect(ENDPOINTS.USUARIOS).toBe('/v1/usuarios');
+      expect(ENDPOINTS.USUARIOS).toBe('/v1/usuario');
     });
 
     test('should generate correct USUARIO_BY_ID endpoint', () => {
       const id = 123;
-      expect(ENDPOINTS.USUARIO_BY_ID(id)).toBe('/v1/usuarios/123');
+      expect(ENDPOINTS.USUARIO_BY_ID(id)).toBe('/v1/usuario/123');
     });
 
     test('should handle different ID values in USUARIO_BY_ID', () => {
-      expect(ENDPOINTS.USUARIO_BY_ID(1)).toBe('/v1/usuarios/1');
-      expect(ENDPOINTS.USUARIO_BY_ID(999)).toBe('/v1/usuarios/999');
+      expect(ENDPOINTS.USUARIO_BY_ID(1)).toBe('/v1/usuario/1');
+      expect(ENDPOINTS.USUARIO_BY_ID(999)).toBe('/v1/usuario/999');
     });
   });
 
