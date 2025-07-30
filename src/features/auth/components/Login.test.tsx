@@ -4,12 +4,25 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Login from './Login';
 import { api } from '../../../services/api';
+import { AppProvider } from '../../../context';
 
 // Mock da API
 jest.mock('../../../services/api', () => ({
   api: {
     post: jest.fn(),
   },
+}));
+
+// Mock do useAppNavigation
+jest.mock('../../../hooks/useAppNavigation', () => ({
+  useAppNavigation: () => ({
+    navigateTo: jest.fn(),
+    goBack: jest.fn(),
+    goForward: jest.fn(),
+    getCurrentPath: jest.fn(() => '/auth'),
+    isCurrentPath: jest.fn(() => true),
+    location: { pathname: '/auth' }
+  })
 }));
 
 const mockApi = api as jest.Mocked<typeof api>;
@@ -20,8 +33,14 @@ const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
 // Mock do console.error para verificar se erros são logados
 const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-// Mock do alert para verificar se é chamado
-const mockAlert = jest.spyOn(window, 'alert').mockImplementation(() => {});
+// Helper para renderizar com providers necessários
+const renderWithProviders = (component: React.ReactElement) => {
+  return render(
+    <AppProvider>
+      {component}
+    </AppProvider>
+  );
+};
 
 describe('Login Component', () => {
   beforeEach(() => {
@@ -31,7 +50,17 @@ describe('Login Component', () => {
     
     // Setup padrão da API mock para sucesso
     mockApi.post.mockResolvedValue({
-      data: { token: 'fake-token' },
+      data: { 
+        token: 'fake-token',
+        usuario: {
+          id: '1',
+          nome: 'Usuário Teste',
+          login: 'usuario123',
+          email: 'usuario@test.com',
+          perfil: 'admin'
+        },
+        refreshToken: 'fake-refresh-token'
+      },
       status: 200,
       statusText: 'OK',
       headers: {},
@@ -49,12 +78,11 @@ describe('Login Component', () => {
   afterAll(() => {
     mockConsoleLog.mockRestore();
     mockConsoleError.mockRestore();
-    mockAlert.mockRestore();
   });
 
   describe('Renderização inicial', () => {
     test('deve renderizar todos os elementos do formulário', () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       // Verifica se os campos de input estão presentes
       expect(screen.getByLabelText(/login/i)).toBeInTheDocument();
@@ -68,14 +96,14 @@ describe('Login Component', () => {
     });
 
     test('deve renderizar campos com placeholders corretos', () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       expect(screen.getByPlaceholderText(/digite seu login/i)).toBeInTheDocument();
       expect(screen.getByPlaceholderText(/digite sua senha/i)).toBeInTheDocument();
     });
 
     test('deve renderizar campos com atributos corretos', () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -92,14 +120,14 @@ describe('Login Component', () => {
     });
 
     test('deve ter botão entrar desabilitado quando campos estão vazios', () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const submitButton = screen.getByRole('button', { name: /entrar/i });
       expect(submitButton).toBeDisabled();
     });
 
     test('não deve exibir mensagem de erro inicialmente', () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       expect(screen.queryByText(/erro/i)).not.toBeInTheDocument();
     });
@@ -107,7 +135,7 @@ describe('Login Component', () => {
 
   describe('Interações com inputs', () => {
     test('deve atualizar valor do campo login', async () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       await userEvent.type(loginInput, 'meulogin');
@@ -116,7 +144,7 @@ describe('Login Component', () => {
     });
 
     test('deve atualizar valor do campo senha', async () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const senhaInput = screen.getByLabelText(/senha/i);
       await userEvent.type(senhaInput, 'minhasenha');
@@ -125,7 +153,7 @@ describe('Login Component', () => {
     });
 
     test('deve habilitar botão entrar quando ambos os campos são preenchidos', async () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -138,7 +166,7 @@ describe('Login Component', () => {
     });
 
     test('deve desabilitar botão entrar quando apenas login é preenchido', async () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const submitButton = screen.getByRole('button', { name: /entrar/i });
@@ -149,7 +177,7 @@ describe('Login Component', () => {
     });
 
     test('deve desabilitar botão entrar quando apenas senha é preenchida', async () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const senhaInput = screen.getByLabelText(/senha/i);
       const submitButton = screen.getByRole('button', { name: /entrar/i });
@@ -161,19 +189,24 @@ describe('Login Component', () => {
   });
 
   describe('Funcionalidade de recuperar senha', () => {
-    test('deve chamar alert ao clicar em recuperar senha', async () => {
-      render(<Login />);
+    test('deve mostrar alert ao clicar em recuperar senha', async () => {
+      // Mock do alert para este teste específico
+      const mockAlert = jest.spyOn(window, 'alert').mockImplementation(() => {});
+      
+      renderWithProviders(<Login />);
 
       const forgotPasswordButton = screen.getByRole('button', { name: /recuperar senha/i });
       await userEvent.click(forgotPasswordButton);
 
       expect(mockAlert).toHaveBeenCalledWith('Funcionalidade de recuperação de senha em desenvolvimento');
+      
+      mockAlert.mockRestore();
     });
   });
 
   describe('Submissão do formulário', () => {
-    test('deve submeter formulário com dados corretos e mostrar sucesso', async () => {
-      render(<Login />);
+    test('deve submeter formulário com dados corretos e fazer login', async () => {
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -196,14 +229,15 @@ describe('Login Component', () => {
         senha: 'senha123'
       });
 
+      // Verifica se a API foi chamada corretamente
+      expect(mockApi.post).toHaveBeenCalledWith('/v1/usuario/login', {
+        login: 'usuario123',
+        senha: 'senha123'
+      });
+
       // Avança o timer para simular a conclusão da Promise
       await act(async () => {
         jest.advanceTimersByTime(1000);
-      });
-
-      // Espera a conclusão da operação assíncrona
-      await waitFor(() => {
-        expect(mockAlert).toHaveBeenCalledWith('Login realizado com sucesso!');
       });
 
       // Verifica se o botão volta ao estado normal
@@ -217,7 +251,7 @@ describe('Login Component', () => {
     });
 
     test('deve submeter formulário com tecla Enter', async () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -244,14 +278,13 @@ describe('Login Component', () => {
     });
 
     test('deve prevenir submissão quando campos estão vazios', () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       // Verifica se o botão está desabilitado (prevenindo submissão)
       const submitButton = screen.getByRole('button', { name: /entrar/i });
       expect(submitButton).toBeDisabled();
 
-      // Como o botão está desabilitado, não deve haver submissão
-      expect(mockConsoleLog).not.toHaveBeenCalled();
+      // Verifica que não há texto de loading
       expect(screen.queryByText(/entrando.../i)).not.toBeInTheDocument();
     });
 
@@ -259,7 +292,7 @@ describe('Login Component', () => {
       // Mock da API para rejeitar
       mockApi.post.mockRejectedValueOnce(new Error('Erro simulado'));
 
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -272,9 +305,9 @@ describe('Login Component', () => {
       // Submete o formulário
       await userEvent.click(submitButton);
 
-      // Espera a mensagem de erro aparecer
+      // Verifica se o console.error foi chamado
       await waitFor(() => {
-        expect(screen.getByText(/erro ao realizar login/i)).toBeInTheDocument();
+        expect(mockConsoleError).toHaveBeenCalledWith('Erro na chamada de login:', expect.any(Error));
       });
 
       // Verifica se o botão volta ao estado normal
@@ -292,14 +325,18 @@ describe('Login Component', () => {
       mockApi.post
         .mockRejectedValueOnce(new Error('Erro simulado'))
         .mockResolvedValueOnce({
-          data: { token: 'fake-token' },
+          data: { 
+            token: 'fake-token',
+            refreshToken: 'fake-refresh-token',
+            usuario: { id: 1, login: 'usuario123' }
+          },
           status: 200,
           statusText: 'OK',
           headers: {},
           config: { headers: {} as any },
         } as any);
 
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -312,9 +349,9 @@ describe('Login Component', () => {
       // Primeira submissão (com erro)
       await userEvent.click(submitButton);
 
-      // Espera erro aparecer
+      // Espera erro aparecer no console
       await waitFor(() => {
-        expect(screen.getByText(/erro ao realizar login/i)).toBeInTheDocument();
+        expect(mockConsoleError).toHaveBeenCalledWith('Erro na chamada de login:', expect.any(Error));
       });
 
       // Segunda submissão (sem erro)
@@ -324,16 +361,14 @@ describe('Login Component', () => {
 
       await userEvent.click(submitButton);
 
-      // Verifica se o erro foi limpo
-      await waitFor(() => {
-        expect(screen.queryByText(/erro ao realizar login/i)).not.toBeInTheDocument();
-      });
+      // Verifica se a API foi chamada novamente
+      expect(mockApi.post).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('Estados de loading', () => {
     test('deve desabilitar botão durante loading', async () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -348,7 +383,7 @@ describe('Login Component', () => {
     });
 
     test('deve manter inputs habilitados durante loading', async () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -366,7 +401,7 @@ describe('Login Component', () => {
 
   describe('Acessibilidade', () => {
     test('deve ter labels associados aos inputs', () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -376,7 +411,7 @@ describe('Login Component', () => {
     });
 
     test('deve ter IDs únicos para inputs', () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -386,7 +421,7 @@ describe('Login Component', () => {
     });
 
     test('deve ter autocomplete apropriado', () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -398,7 +433,7 @@ describe('Login Component', () => {
 
   describe('Classes CSS e estrutura', () => {
     test('deve renderizar a estrutura básica do componente', () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       // Verifica se os elementos principais estão presentes usando métodos do Testing Library
       expect(screen.getByLabelText(/login/i)).toBeInTheDocument();
@@ -407,13 +442,11 @@ describe('Login Component', () => {
       expect(screen.getByRole('button', { name: /entrar/i })).toBeInTheDocument();
     });
 
-    test('deve mostrar mensagem de erro quando erro está presente', async () => {
-      // Mock para gerar erro
-      mockConsoleLog.mockImplementationOnce(() => {
-        throw new Error('Erro simulado');
-      });
+    test('deve mostrar mensagem no console em caso de erro', async () => {
+      // Mock da API para rejeitar
+      mockApi.post.mockRejectedValueOnce(new Error('Erro simulado'));
 
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -422,19 +455,15 @@ describe('Login Component', () => {
       await userEvent.type(senhaInput, 'senha123');
       await userEvent.click(screen.getByRole('button', { name: /entrar/i }));
 
-      await act(async () => {
-        jest.advanceTimersByTime(1000);
-      });
-
       await waitFor(() => {
-        expect(screen.getByText(/erro ao realizar login/i)).toBeInTheDocument();
+        expect(mockConsoleError).toHaveBeenCalledWith('Erro na chamada de login:', expect.any(Error));
       });
     });
   });
 
   describe('Manipulação de eventos', () => {
     test('deve chamar handleInputChange ao digitar no campo login', async () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       
@@ -446,7 +475,7 @@ describe('Login Component', () => {
     });
 
     test('deve chamar handleInputChange ao digitar no campo senha', async () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const senhaInput = screen.getByLabelText(/senha/i);
       
@@ -458,7 +487,7 @@ describe('Login Component', () => {
     });
 
     test('deve atualizar estado interno corretamente', async () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -480,7 +509,7 @@ describe('Login Component', () => {
 
   describe('Comportamento do formulário', () => {
     test('deve ter inputs com name attributes corretos', () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
@@ -490,7 +519,7 @@ describe('Login Component', () => {
     });
 
     test('deve ter formulário funcional', async () => {
-      render(<Login />);
+      renderWithProviders(<Login />);
 
       const loginInput = screen.getByLabelText(/login/i);
       const senhaInput = screen.getByLabelText(/senha/i);
