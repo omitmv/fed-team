@@ -2,16 +2,12 @@ import React from 'react';
 import '../../../styles/theme.css';
 import '../../../styles/components.css';
 import '../styles/App.css';
-import PluginManager from './PluginManager';
-//import { Login } from '../../auth';
+import { AppRouter } from '../../../router';
 
 function App() {
   return (
     <div className="App">
-      <main className="App-main">
-        {/* <Login /> */}
-        <PluginManager />
-      </main>
+      <AppRouter />
     </div>
   );
 }
