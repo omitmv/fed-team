@@ -149,10 +149,9 @@ const Login: React.FC = () => {
 
             <div className="form-actions">
               <button
-                type="button"
-                onClick={handleForgotPassword}
-                className="link-secondary"
-              >
+                onClick={() =>handleForgotPassword}
+                className='btn-link'
+                >
                 Recuperar senha
               </button>
             </div>
