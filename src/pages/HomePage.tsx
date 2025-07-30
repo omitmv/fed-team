@@ -1,5 +1,4 @@
 import React from 'react';
-import PluginManager from '../features/app/components/PluginManager';
 
 export const HomePage: React.FC = () => {
   return (
@@ -22,10 +21,6 @@ export const HomePage: React.FC = () => {
             <h3>Autenticação</h3>
             <p>Sistema de login e autenticação</p>
           </div>
-        </div>
-        <div className="plugin-section">
-          <h2>Gerenciador de Plugins</h2>
-          <PluginManager />
         </div>
       </div>
     </div>

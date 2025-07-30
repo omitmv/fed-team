@@ -101,6 +101,7 @@
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
+  padding-top: 80px; /* Espaço para o botão hamburger (48px altura + 16px top + margem) */
 }
 
 .page-header {
@@ -239,6 +240,10 @@
   
   .main-content {
     padding: 1rem;
+  }
+  
+  .page {
+    padding-top: 70px; /* Ajuste para mobile (botão fica em top: 12px) */
   }
   
   .page-header h1 {
