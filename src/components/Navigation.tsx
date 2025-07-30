@@ -8,7 +8,11 @@ interface NavigationProps {
 }
 
 export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
-  const { state } = useAppContext();
+  const { state, logout } = useAppContext();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <nav className={`navigation ${className}`}>
@@ -56,10 +60,7 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
             <span>Olá, {state.currentUser.nome || 'Usuário'}</span>
             <button 
               className="btn-logout"
-              onClick={() => {
-                // Implementar logout
-                console.log('Logout clicked');
-              }}
+              onClick={handleLogout}
             >
               Sair
             </button>

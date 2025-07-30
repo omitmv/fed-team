@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { API_CONFIG } from '../constants';
 import { ErrorLogger } from '../utils/errorHandler';
+import { authService } from './authService';
 
 // Configuração da instância do Axios
 const apiClient: AxiosInstance = axios.create({
@@ -15,14 +16,22 @@ const apiClient: AxiosInstance = axios.create({
 // Interceptor para requisições
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Aqui você pode adicionar tokens de autenticação, logs, etc.
+    // Log da requisição
     console.log(`🚀 Fazendo requisição: ${config.method?.toUpperCase()} ${config.url}`);
     
-    // Exemplo de como adicionar token de autenticação
-    // const token = localStorage.getItem('authToken');
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    // Adicionar Bearer Token para endpoints que precisam de autenticação
+    if (config.url && authService.needsAuthentication(config.url)) {
+      const bearerToken = authService.getBearerToken();
+      
+      if (bearerToken) {
+        config.headers.Authorization = bearerToken;
+        console.log(`🔐 Token adicionado para: ${config.url}`);
+      } else {
+        console.warn(`⚠️  Token não encontrado para requisição autenticada: ${config.url}`);
+      }
+    } else {
+      console.log(`🔓 Requisição pública (sem token): ${config.url}`);
+    }
     
     return config;
   },
@@ -46,24 +55,29 @@ apiClient.interceptors.response.use(
     // Tratamento específico para diferentes tipos de erro
     if (error.response) {
       // O servidor respondeu com um status de erro
-      const { status, data } = error.response;
+      const { status, data, config } = error.response;
       console.error(`❌ Erro ${status}:`, data);
       
       // Tratamentos específicos por status
       switch (status) {
         case 401:
-          // Token expirado - redirecionar para login
-          // localStorage.removeItem('authToken');
-          // window.location.href = '/login';
+          // Token inválido/expirado - fazer logout automático
+          console.warn('🚫 Token inválido ou expirado - realizando logout automático');
+          authService.logout();
+          
+          // Redirecionar para página de autenticação (somente se não for a própria página de login)
+          if (!config.url?.includes('/v1/usuario/login')) {
+            window.location.href = '/auth';
+          }
           break;
         case 403:
-          console.warn('Acesso negado - permissões insuficientes');
+          console.warn('🔒 Acesso negado - permissões insuficientes');
           break;
         case 404:
-          console.warn('Recurso não encontrado');
+          console.warn('🔍 Recurso não encontrado');
           break;
         case 500:
-          console.error('Erro interno do servidor');
+          console.error('🔥 Erro interno do servidor');
           break;
       }
     } else if (error.request) {

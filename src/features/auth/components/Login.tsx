@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { LoginCredentials } from '../types';
 import { api } from '../../../services/api';
+import { useAppContext } from '../../../context';
+import { useAppNavigation } from '../../../hooks/useAppNavigation';
 
 const Login: React.FC = () => {
+  const { login, addNotification } = useAppContext();
+  const { navigateTo } = useAppNavigation();
+  
   const [formData, setFormData] = useState<LoginCredentials>({
     login: '',
     senha: '',
@@ -32,10 +37,27 @@ const Login: React.FC = () => {
         senha: formData.senha
       });
       
-      const { token } = response.data;
-      localStorage.setItem('token', token);
-      // TODO: Implementar tratamento da resposta (salvar token, redirecionar, etc.)
-      alert('Login realizado com sucesso!');
+      const { token, usuario, refreshToken } = response.data;
+      
+      // Usar o sistema de autenticação integrado
+      login(token, {
+        id: usuario.id || usuario.login,
+        nome: usuario.nome || usuario.login,
+        login: usuario.login,
+        email: usuario.email,
+        perfil: usuario.perfil
+      }, refreshToken);
+      
+      // Adicionar notificação de sucesso
+      addNotification({
+        type: 'success',
+        message: `Bem-vindo(a), ${usuario.nome || usuario.login}!`,
+        duration: 5000
+      });
+      
+      // Redirecionar para a página inicial
+      navigateTo('/');
+      
     } catch (err: any) {
       console.error('Erro na chamada de login:', err);
       
@@ -64,6 +86,13 @@ const Login: React.FC = () => {
         console.error('Erro de configuração:', err.message);
         setError('Erro ao realizar login. Tente novamente.');
       }
+      
+      // Adicionar notificação de erro
+      addNotification({
+        type: 'error',
+        message: 'Falha no login. Verifique suas credenciais.',
+        duration: 5000
+      });
     } finally {
       setLoading(false);
     }

@@ -3,6 +3,10 @@
 // API principal
 export { api, default as apiClient } from './api';
 
+// Serviço de autenticação
+export { default as authService } from './authService';
+export type { AuthTokens, AuthUser } from './authService';
+
 // API do Plugin
 export { 
   pluginApi, 
