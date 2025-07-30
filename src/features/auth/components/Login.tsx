@@ -37,21 +37,20 @@ const Login: React.FC = () => {
         senha: formData.senha
       });
       
-      const { token, usuario, refreshToken } = response.data;
+      const { token, cdUsuario, login: userLogin, nome, email, expiresIn } = response.data;
       
       // Usar o sistema de autenticação integrado
       login(token, {
-        id: usuario.id || usuario.login,
-        nome: usuario.nome || usuario.login,
-        login: usuario.login,
-        email: usuario.email,
-        perfil: usuario.perfil
-      }, refreshToken);
+        id: cdUsuario.toString(),
+        nome: nome,
+        login: userLogin,
+        email: email
+      }, expiresIn);
       
       // Adicionar notificação de sucesso
       addNotification({
         type: 'success',
-        message: `Bem-vindo(a), ${usuario.nome || usuario.login}!`,
+        message: `Bem-vindo(a), ${nome || userLogin}!`,
         duration: 5000
       });
       
