@@ -3,6 +3,8 @@
  * Responsável por gerenciar tokens, login, logout e estado de autenticação
  */
 
+import { pluginApi } from './pluginApi';
+
 export interface AuthTokens {
   accessToken: string;
   refreshToken?: string;
@@ -17,23 +19,22 @@ export interface AuthUser {
   perfil?: string;
 }
 
-const TOKEN_KEY = 'fed_team_token';
 const USER_KEY = 'fed_team_user';
 const REFRESH_TOKEN_KEY = 'fed_team_refresh_token';
 
 class AuthService {
   /**
-   * Salva o token de acesso no localStorage
+   * Salva o token de acesso usando o pluginApi
    */
   setAccessToken(token: string): void {
-    localStorage.setItem(TOKEN_KEY, token);
+    pluginApi.saveBearerToken(token);
   }
 
   /**
-   * Recupera o token de acesso do localStorage
+   * Recupera o token de acesso usando o pluginApi
    */
   getAccessToken(): string | null {
-    return localStorage.getItem(TOKEN_KEY);
+    return pluginApi.getBearerToken();
   }
 
   /**
@@ -98,7 +99,7 @@ class AuthService {
    * Limpa apenas o token de acesso
    */
   clearToken(): void {
-    localStorage.removeItem(TOKEN_KEY);
+    pluginApi.clearBearerToken();
   }
 
   /**

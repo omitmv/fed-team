@@ -19,13 +19,23 @@ const pluginApiClient: AxiosInstance = axios.create({
   },
 });
 
+// Funções auxiliares para gerenciamento de token
+const getStoredBearerToken = (): string | null => {
+  try {
+    return (window as any).pluginStorage?.bearerToken || null;
+  } catch (error) {
+    console.error('Erro ao recuperar token do plugin:', error);
+    return null;
+  }
+};
+
 // Interceptor para requisições do plugin
 pluginApiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     console.log(`🔌 Plugin API: ${config.method?.toUpperCase()} ${config.url}`);
     
     // Adicionar token de autenticação se necessário
-    const token = localStorage.getItem('token');
+    const token = getStoredBearerToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -189,6 +199,43 @@ export const pluginApi = {
    */
   ping: (): Promise<AxiosResponse<PluginApiResponse<{ pong: boolean }>>> =>
     pluginApiClient.get('/ping'),
+
+  // Métodos de gerenciamento de token Bearer
+
+  /**
+   * Salva o token Bearer no armazenamento do plugin
+   */
+  saveBearerToken: (token: string): void => {
+    try {
+      // Armazena o token no contexto do plugin
+      (window as any).pluginStorage = (window as any).pluginStorage || {};
+      (window as any).pluginStorage.bearerToken = token;
+      console.log('🔐 Token Bearer salvo no plugin');
+    } catch (error) {
+      console.error('Erro ao salvar token no plugin:', error);
+    }
+  },
+
+  /**
+   * Recupera o token Bearer do armazenamento do plugin
+   */
+  getBearerToken: (): string | null => {
+    return getStoredBearerToken();
+  },
+
+  /**
+   * Limpa o token Bearer do armazenamento do plugin
+   */
+  clearBearerToken: (): void => {
+    try {
+      if ((window as any).pluginStorage) {
+        delete (window as any).pluginStorage.bearerToken;
+        console.log('🔐 Token Bearer removido do plugin');
+      }
+    } catch (error) {
+      console.error('Erro ao limpar token do plugin:', error);
+    }
+  },
 };
 
 // Função utilitária para verificar se o plugin está disponível
