@@ -156,7 +156,6 @@ const Login: React.FC = () => {
                 onClick={() => handleForgotPassword()}
                 className='btn-link'
                 >
-                <MaterialIcon name="help" color="secondary" size="small" />
                 Recuperar senha
               </button>
             </div>
