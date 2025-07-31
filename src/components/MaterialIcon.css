@@ -1,0 +1,77 @@
+/* Material Icon Component Styles */
+.material-icon {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.material-icon--clickable {
+  cursor: pointer;
+}
+
+.material-icon--clickable:hover {
+  opacity: 0.8;
+}
+
+.material-icon--clickable:active {
+  opacity: 0.6;
+}
+
+/* Tamanhos predefinidos */
+.material-icon--small {
+  font-size: 18px;
+}
+
+.material-icon--medium {
+  font-size: 24px;
+}
+
+.material-icon--large {
+  font-size: 36px;
+}
+
+/* Cores do tema */
+.material-icon--primary {
+  color: var(--color-primary);
+}
+
+.material-icon--secondary {
+  color: var(--color-secondary);
+}
+
+.material-icon--success {
+  color: var(--color-success);
+}
+
+.material-icon--warning {
+  color: var(--color-warning);
+}
+
+.material-icon--danger {
+  color: var(--color-danger);
+}
+
+.material-icon--muted {
+  color: var(--color-text-muted);
+}
+
+.material-icon--white {
+  color: white;
+}
+
+.material-icon--error {
+  color: var(--color-error, #dc3545);
+}
+
+.material-icon--accent {
+  color: var(--color-accent, #6f42c1);
+}
+
+.material-icon--disabled {
+  color: var(--color-disabled, #6c757d);
+}

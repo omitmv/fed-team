@@ -89,6 +89,9 @@
 
 /* Botão de link/texto */
 .btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
   background: transparent;
   color: var(--color-primary);
   border: none;
@@ -132,6 +135,9 @@
 }
 
 .form-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
@@ -664,6 +670,7 @@
 .drawer-menu-link {
   display: flex;
   align-items: center;
+  gap: var(--spacing-sm);
   padding: var(--spacing-md) var(--spacing-lg);
   color: var(--color-text-primary);
   text-decoration: none;
@@ -711,6 +718,9 @@
 }
 
 .user-name {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   margin: 0 0 var(--spacing-xs) 0;
@@ -727,6 +737,10 @@
   transition: all 200ms ease;
   min-height: 36px;
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
 }
 
 .btn-logout:hover {
@@ -736,6 +750,10 @@
 }
 
 .auth-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   text-align: center;

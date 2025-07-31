@@ -7,18 +7,25 @@ export interface LoginCredentials {
 
 export interface LoginResponse {
   token: string;
-  user: {
-    id: number;
-    login: string;
-    nome: string;
-    email: string;
-  };
+  cdUsuario: number;
+  login: string;
+  nome: string;
+  email: string;
+  cdTpAcesso: number;
   expiresIn: number;
+}
+
+export interface User {
+  id: string;
+  login: string;
+  nome: string;
+  email: string;
+  cdTpAcesso: number;
 }
 
 export interface AuthState {
   isAuthenticated: boolean;
-  user: LoginResponse['user'] | null;
+  currentUser: User | null;
   token: string | null;
   loading: boolean;
   error: string | null;

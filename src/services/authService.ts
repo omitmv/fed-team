@@ -17,6 +17,7 @@ export interface AuthUser {
   login: string;
   email?: string;
   perfil?: string;
+  cdTpAcesso: number;
 }
 
 const USER_KEY = 'fed_team_user';

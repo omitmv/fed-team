@@ -110,6 +110,9 @@
 }
 
 .page-header h1 {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md, 1rem);
   color: var(--text-primary, #333);
   margin-bottom: 0.5rem;
   font-size: 2.5rem;
@@ -152,6 +155,9 @@
 }
 
 .feature-card h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 0.5rem);
   color: var(--primary-color, #007bff);
   margin-bottom: 0.5rem;
   font-size: 1.25rem;

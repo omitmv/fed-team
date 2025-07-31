@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from '../context';
 import Navigation from '../components/Navigation';
 import ProtectedRoute, { PublicRoute } from '../components/ProtectedRoute';
-import { HomePage, AuthPage, UsuariosPage, PluginsPage, NotFoundPage } from '../pages';
+import { HomePage, AuthPage, UsuariosPage, PluginsPage, TreinosPage, NotFoundPage } from '../pages';
 import '../styles/layout.css';
 
 interface AppRouterProps {
@@ -53,6 +53,15 @@ export const AppRouter: React.FC<AppRouterProps> = ({ className = '' }) => {
                 element={
                   <ProtectedRoute>
                     <PluginsPage />
+                  </ProtectedRoute>
+                } 
+              />
+
+              <Route 
+                path="/treinos" 
+                element={
+                  <ProtectedRoute>
+                    <TreinosPage />
                   </ProtectedRoute>
                 } 
               />

@@ -3,6 +3,7 @@ import { LoginCredentials } from '../types';
 import { api } from '../../../services/api';
 import { useAppContext } from '../../../context';
 import { useAppNavigation } from '../../../hooks/useAppNavigation';
+import MaterialIcon from '../../../components/MaterialIcon';
 
 const Login: React.FC = () => {
   const { login, addNotification } = useAppContext();
@@ -32,19 +33,20 @@ const Login: React.FC = () => {
     try {
       // Chamada para o endpoint de login
       console.log('Enviando dados de login:', formData);
-      const response = await api.post('/v1/usuario/login', {
+      const response = await api.post('/auth/login', {
         login: formData.login,
         senha: formData.senha
       });
       
-      const { token, cdUsuario, login: userLogin, nome, email, expiresIn } = response.data;
+      const { token, cdUsuario, login: userLogin, nome, email, cdTpAcesso, expiresIn } = response.data;
       
       // Usar o sistema de autenticação integrado
       login(token, {
         id: cdUsuario.toString(),
         nome: nome,
         login: userLogin,
-        email: email
+        email: email,
+        cdTpAcesso: cdTpAcesso
       }, expiresIn);
       
       // Adicionar notificação de sucesso
@@ -115,6 +117,7 @@ const Login: React.FC = () => {
           <form onSubmit={handleSubmit} className="form">
             <div className="form-group">
               <label htmlFor="login" className="form-label">
+                <MaterialIcon name="person" color="primary" size="small" />
                 Login
               </label>
               <input
@@ -132,6 +135,7 @@ const Login: React.FC = () => {
 
             <div className="form-group">
               <label htmlFor="senha" className="form-label">
+                <MaterialIcon name="lock" color="primary" size="small" />
                 Senha
               </label>
               <input
@@ -149,9 +153,10 @@ const Login: React.FC = () => {
 
             <div className="form-actions">
               <button
-                onClick={() =>handleForgotPassword}
+                onClick={() => handleForgotPassword()}
                 className='btn-link'
                 >
+                <MaterialIcon name="help" color="secondary" size="small" />
                 Recuperar senha
               </button>
             </div>
@@ -161,7 +166,17 @@ const Login: React.FC = () => {
               className={`btn btn-primary btn-full ${loading ? 'btn-loading' : ''}`}
               disabled={loading || !formData.login || !formData.senha}
             >
-              {loading ? 'Entrando...' : 'Entrar'}
+              {loading ? (
+                <>
+                  <MaterialIcon name="hourglass_empty" color="white" size="small" />
+                  Entrando...
+                </>
+              ) : (
+                <>
+                  <MaterialIcon name="login" color="white" size="small" />
+                  Entrar
+                </>
+              )}
             </button>
           </form>
         </div>

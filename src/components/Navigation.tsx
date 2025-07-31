@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAppContext } from '../context';
+import MaterialIcon from './MaterialIcon';
 import '../styles/components.css';
 
 interface NavigationProps {
@@ -71,7 +72,7 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
         className="hamburger-btn"
         onClick={toggleDrawer}
         aria-label={isDrawerOpen ? 'Fechar menu' : 'Abrir menu'}
-        aria-expanded={isDrawerOpen}
+        {...(isDrawerOpen ? { 'aria-expanded': 'true' } : { 'aria-expanded': 'false' })}
       >
         <div className={`hamburger-icon ${isDrawerOpen ? 'open' : ''}`}>
           <span></span>
@@ -109,7 +110,8 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
                 onClick={handleMenuItemClick}
                 end
               >
-                Home
+                <MaterialIcon name="home" color="primary" size="small" />
+                <span>Home</span>
               </NavLink>
             </li>
             <li className="drawer-menu-item">
@@ -120,7 +122,8 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
                 }
                 onClick={handleMenuItemClick}
               >
-                Autenticação
+                <MaterialIcon name="login" color="primary" size="small" />
+                <span>Autenticação</span>
               </NavLink>
             </li>
             <li className="drawer-menu-item">
@@ -131,7 +134,8 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
                 }
                 onClick={handleMenuItemClick}
               >
-                Usuários
+                <MaterialIcon name="people" color="primary" size="small" />
+                <span>Usuários</span>
               </NavLink>
             </li>
             <li className="drawer-menu-item">
@@ -142,7 +146,20 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
                 }
                 onClick={handleMenuItemClick}
               >
-                Plugins
+                <MaterialIcon name="extension" color="primary" size="small" />
+                <span>Plugins</span>
+              </NavLink>
+            </li>
+            <li className="drawer-menu-item">
+              <NavLink 
+                to="/treinos" 
+                className={({ isActive }) => 
+                  `drawer-menu-link ${isActive ? 'active' : ''}`
+                }
+                onClick={handleMenuItemClick}
+              >
+                <MaterialIcon name="fitness_center" color="primary" size="small" />
+                <span>Treinos</span>
               </NavLink>
             </li>
           </ul>
@@ -154,7 +171,8 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
             <div className="user-info">
               <div>
                 <p className="user-name">
-                  Olá, {state.currentUser.nome || 'Usuário'}
+                  <MaterialIcon name="person" color="accent" size="small" />
+                  <span>Olá, {state.currentUser.nome || 'Usuário'}</span>
                 </p>
               </div>
               <button 
@@ -162,11 +180,13 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
                 onClick={handleLogout}
                 aria-label="Fazer logout"
               >
-                Sair
+                <MaterialIcon name="logout" color="error" size="small" />
+                <span>Sair</span>
               </button>
             </div>
           ) : (
             <div className="auth-status">
+              <MaterialIcon name="lock" color="warning" size="small" />
               <span>Não autenticado</span>
             </div>
           )}
