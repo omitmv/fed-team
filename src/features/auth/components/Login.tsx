@@ -32,8 +32,8 @@ const Login: React.FC = () => {
 
     try {
       // Chamada para o endpoint de login
-      console.log('Enviando dados de login:', formData);
-      const response = await api.post('/auth/login', {
+      console.log('Enviando dados de login:', JSON.stringify(formData));
+      const response = await api.post('/v1/usuario/login', {
         login: formData.login,
         senha: formData.senha
       });
@@ -60,13 +60,13 @@ const Login: React.FC = () => {
       navigateTo('/');
       
     } catch (err: any) {
-      console.error('Erro na chamada de login:', err);
+      console.error('Erro na chamada de login:', JSON.stringify(err));
       
       if (err.response) {
         // Erro com resposta do servidor
-        console.error('Dados do erro:', err.response.data);
-        console.error('Status do erro:', err.response.status);
-        console.error('Headers do erro:', err.response.headers);
+        console.error('Dados do erro:', JSON.stringify(err.response.data));
+        console.error('Status do erro:', JSON.stringify(err.response.status));
+        console.error('Headers do erro:', JSON.stringify(err.response.headers));
         
         // Personalizar mensagem baseada no status
         if (err.response.status === 401) {
@@ -80,7 +80,7 @@ const Login: React.FC = () => {
         }
       } else if (err.request) {
         // Erro de conexão
-        console.error('Erro de conexão:', err.request);
+        console.error('Erro de conexão:', JSON.stringify(err.request));
         setError('Erro de conexão. Verifique sua internet.');
       } else {
         // Erro de configuração

@@ -101,7 +101,7 @@ export class ErrorLogger {
     console.group(`${prefix} ${timestamp}`);
     
     if (error instanceof AxiosError) {
-      console.error('Axios Error:', {
+      console.error('Axios Error:', JSON.stringify({
         message: error.message,
         status: error.response?.status,
         statusText: error.response?.statusText,
@@ -111,7 +111,7 @@ export class ErrorLogger {
           method: error.config?.method,
           headers: error.config?.headers,
         },
-      });
+      }));
     } else if (error instanceof Error) {
       console.error('Generic Error:', {
         name: error.name,

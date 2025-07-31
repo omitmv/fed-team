@@ -142,7 +142,7 @@ class AuthService {
     // Lista de endpoints que NÃO precisam de autenticação
     const publicEndpoints = [
       '/v1/usuario/login',
-      '/v1/usuario/register', // caso exista
+      '/v1/usuario', // caso exista
       '/v1/usuario/forgot-password', // caso exista
       '/v1/usuario/reset-password', // caso exista
     ];

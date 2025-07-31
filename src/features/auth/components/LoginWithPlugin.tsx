@@ -31,7 +31,7 @@ const LoginWithPlugin: React.FC = () => {
 
     try {
       // Chamada para o endpoint de login
-      console.log('Enviando dados de login:', formData);
+      console.log('Enviando dados de login:', JSON.stringify(formData));
       const response = await api.post('/v1/usuario/login', {
         login: formData.login,
         senha: formData.senha
@@ -57,10 +57,10 @@ const LoginWithPlugin: React.FC = () => {
       
       if (err.response) {
         // Erro com resposta do servidor
-        console.error('Dados do erro:', err.response.data);
-        console.error('Status do erro:', err.response.status);
-        console.error('Headers do erro:', err.response.headers);
-        
+        console.error('Dados do erro:', JSON.stringify(err.response.data));
+        console.error('Status do erro:', JSON.stringify(err.response.status));
+        console.error('Headers do erro:', JSON.stringify(err.response.headers));
+
         // Personalizar mensagem baseada no status
         if (err.response.status === 401) {
           setError('Credenciais inválidas. Verifique seu login e senha.');

@@ -7,7 +7,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition: color var(--transition-fast), opacity var(--transition-fast);
 }
 
 .material-icon--clickable {
@@ -35,7 +35,7 @@
   font-size: 36px;
 }
 
-/* Cores do tema */
+/* Cores do tema atualizadas */
 .material-icon--primary {
   color: var(--color-primary);
 }
@@ -46,6 +46,26 @@
 
 .material-icon--success {
   color: var(--color-success);
+}
+
+.material-icon--error {
+  color: var(--color-error);
+}
+
+.material-icon--warning {
+  color: var(--color-warning);
+}
+
+.material-icon--info {
+  color: var(--color-info);
+}
+
+.material-icon--disabled {
+  color: var(--color-disabled);
+}
+
+.material-icon--accent {
+  color: var(--color-primary);
 }
 
 .material-icon--warning {
