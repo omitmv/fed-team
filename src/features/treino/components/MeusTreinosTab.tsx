@@ -52,7 +52,7 @@ const MeusTreinosTab: React.FC<MeusTreinosTabProps> = ({
       </div>
 
       {/* Grid de treinos */}
-      <div className="treinos-grid">
+      <div className="feature-grid">
         {loading ? (
           <div className="loading-placeholder">
             <div className="loading-spinner">⏳</div>
@@ -96,7 +96,7 @@ const MeusTreinosTab: React.FC<MeusTreinosTabProps> = ({
             const progresso = Math.min(Math.round((duracaoDecorrida / duracaoTotal) * 100), 100);
 
             return (
-              <div key={treino.cdTreino} className="treino-card">
+              <div key={treino.cdTreino} className="feature-card">
                 <div className="treino-header">
                   <h3>🏋️ {treino.dsTreino}</h3>
                   <span className={`status-badge ${status}`}>{statusText}</span>

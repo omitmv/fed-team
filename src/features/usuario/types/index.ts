@@ -12,6 +12,7 @@ export interface Usuario {
   dataCadastro: string;        // DateTime, valor padrão: data e hora atual
   flAtivo: boolean;            // Valor padrão: true
   dtExpiracao?: string;        // DateTime, opcional
+  cdTpAcesso: number;          // Tipo de acesso (1-Administrador, 2-Profissional, 3-Atleta, 4-Visitante, 5-Convidado, 6-Padrão)
 }
 
 /**
@@ -25,6 +26,7 @@ export interface UsuarioCreate {
   email: string;
   flAtivo?: boolean;
   dtExpiracao?: string;
+  cdTpAcesso?: number;         // Tipo de acesso (1-Administrador, 2-Profissional, 3-Atleta, 4-Visitante, 5-Convidado, 6-Padrão)
 }
 
 /**
@@ -38,6 +40,7 @@ export interface UsuarioUpdate {
   email?: string;
   flAtivo?: boolean;
   dtExpiracao?: string;
+  cdTpAcesso?: number;         // Tipo de acesso (1-Administrador, 2-Profissional, 3-Atleta, 4-Visitante, 5-Convidado, 6-Padrão)
 }
 
 /**

@@ -232,7 +232,7 @@
 
 .btn-primary {
   background-color: var(--color-primary, #007bff);
-  color: white;
+  color: var(--color-text-secondary, white);
 }
 
 .btn-primary:hover {
