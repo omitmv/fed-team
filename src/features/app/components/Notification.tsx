@@ -1,6 +1,5 @@
 import React from 'react';
 import { NotificationProps } from '../types/notification';
-import './Notification.css';
 
 const Notification: React.FC<NotificationProps> = ({
   type,
@@ -32,33 +31,33 @@ const Notification: React.FC<NotificationProps> = ({
   };
 
   return (
-    <div className="notification-overlay" role="dialog" aria-modal="true">
-      <div className="notification-container">
-        <div className="notification-content" data-testid="notification-content">
+    <div className="modal-overlay" role="dialog" aria-modal="true">
+      <div className="modal">
+        <div className="modal-content text-center">
           {/* Imagem centralizada */}
-          <div className="notification-image">
+          <div className="flex justify-center mb-md">
             <img 
               src={getImageSrc()} 
               alt={getImageAlt()}
-              className={`notification-icon notification-icon--${type}`}
+              className={`w-20 h-20 object-contain ${type === 'success' ? 'icon-enhanced' : 'icon-enhanced'}`}
             />
           </div>
 
           {/* Título */}
-          <h2 className={`notification-title notification-title--${type}`}>
+          <h2 className={`text-xl font-semibold mb-md ${type === 'success' ? 'text-success' : 'text-error'}`}>
             {title}
           </h2>
 
           {/* Mensagem detalhada */}
-          <p className="notification-message">
+          <p className="text-secondary mb-lg">
             {message}
           </p>
 
           {/* Botão */}
-          <div className="notification-actions">
+          <div className="w-full">
             <button 
               type="button"
-              className={`btn btn-full notification-button notification-button--${type}`}
+              className={`btn w-full ${type === 'success' ? 'btn-success' : 'btn-error'}`}
               onClick={handleButtonClick}
             >
               Ok, entendi

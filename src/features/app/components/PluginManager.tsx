@@ -1,6 +1,5 @@
 import React from 'react';
 import { usePlugin } from '../../../hooks/usePlugin';
-import './PluginManager.css';
 
 declare global {
   interface Window {
@@ -88,31 +87,31 @@ const PluginManager: React.FC = () => {
   };
 
   return (
-    <div className="plugin-manager">
-      <div className="plugin-header">
-        <h2>Gerenciador de Plugin</h2>
-        <div className="plugin-status">
-          <span className={`status-indicator ${status}`}></span>
-          <span className="status-text">
+    <div className="card max-w-6xl mx-auto">
+      <div className="flex justify-between items-center mb-lg pb-md border-b">
+        <h2 className="text-primary text-xl font-semibold">Gerenciador de Plugin</h2>
+        <div className="flex items-center gap-sm">
+          <span className={`status-dot ${status} ${isConnected ? 'status-connected' : 'status-disconnected'}`}></span>
+          <span className="text-sm text-secondary font-medium">
             {isConnected ? 'Conectado' : 'Desconectado'} - {status}
           </span>
         </div>
       </div>
 
       {error && (
-        <div className="error-banner">
+        <div className="alert alert-error mb-lg flex justify-between items-center">
           <span>❌ {error}</span>
-          <button onClick={clearError} className="btn-close">×</button>
+          <button onClick={clearError} className="btn btn-sm btn-error">×</button>
         </div>
       )}
 
-      <div className="plugin-controls">
-        <div className="control-group">
-          <h3>Conexão</h3>
-          <div className="button-group">
-            <button className='btn' onClick={() => NativeBridge.getUUID()}>Recuperar UUID</button>
-            <button className='btn' onClick={() => NativeBridge.abrirCamera()}>Abrir Câmera</button>
-            <button className='btn' onClick={() => NativeBridge.mostrarToast('Olá, mundo!')}>Mostrar Toast</button>
+      <div className="grid gap-lg">
+        <div className="card bg-surface">
+          <h3 className="text-primary mb-md">Conexão</h3>
+          <div className="flex gap-sm flex-wrap">
+            <button className='btn btn-secondary' onClick={() => NativeBridge.getUUID()}>Recuperar UUID</button>
+            <button className='btn btn-secondary' onClick={() => NativeBridge.abrirCamera()}>Abrir Câmera</button>
+            <button className='btn btn-secondary' onClick={() => NativeBridge.mostrarToast('Olá, mundo!')}>Mostrar Toast</button>
             <button 
               onClick={handleConnect} 
               disabled={loading || isConnected}
@@ -144,9 +143,9 @@ const PluginManager: React.FC = () => {
           </div>
         </div>
 
-        <div className="control-group">
-          <h3>Sistema</h3>
-          <div className="button-group">
+        <div className="card bg-surface">
+          <h3 className="text-primary mb-md">Sistema</h3>
+          <div className="flex gap-sm flex-wrap">
             <button 
               onClick={restart} 
               disabled={loading || !isConnected}
@@ -173,14 +172,14 @@ const PluginManager: React.FC = () => {
       </div>
 
       {isConnected && (
-        <div className="plugin-content">
-          <div className="content-section">
-            <h3>Configuração</h3>
+        <div className="grid gap-lg mt-lg">
+          <div className="card bg-surface">
+            <h3 className="text-primary mb-md">Configuração</h3>
             {config ? (
-              <div className="config-display">
+              <div className="space-y-sm">
                 <p><strong>Habilitado:</strong> {config.enabled ? 'Sim' : 'Não'}</p>
                 <p><strong>Endpoints:</strong> {config.endpoints?.length || 0}</p>
-                <div className="config-actions">
+                <div className="flex gap-sm mt-md">
                   <button 
                     onClick={getConfig} 
                     disabled={loading}
@@ -199,7 +198,7 @@ const PluginManager: React.FC = () => {
               </div>
             ) : (
               <div>
-                <p>Configuração não carregada</p>
+                <p className="text-secondary mb-md">Configuração não carregada</p>
                 <button 
                   onClick={getConfig} 
                   disabled={loading}
@@ -211,9 +210,9 @@ const PluginManager: React.FC = () => {
             )}
           </div>
 
-          <div className="content-section">
-            <h3>Dispositivos ({devices.length})</h3>
-            <div className="devices-actions">
+          <div className="card bg-surface">
+            <h3 className="text-primary mb-md">Dispositivos ({devices.length})</h3>
+            <div className="mb-md">
               <button 
                 onClick={scanDevices} 
                 disabled={loading}
@@ -222,18 +221,18 @@ const PluginManager: React.FC = () => {
                 Escanear Dispositivos
               </button>
             </div>
-            <div className="devices-list">
+            <div className="space-y-sm">
               {devices.length > 0 ? (
                 devices.map((device, index) => (
-                  <div key={device.id || index} className="device-item">
-                    <div className="device-info">
-                      <strong>{device.name || `Dispositivo ${index + 1}`}</strong>
-                      <span className="device-id">ID: {device.id || 'N/A'}</span>
-                      <span className={`device-status ${device.connected ? 'connected' : 'disconnected'}`}>
+                  <div key={device.id || index} className="flex justify-between items-center p-md bg-background border border-border rounded">
+                    <div className="space-y-xs">
+                      <strong className="text-primary">{device.name || `Dispositivo ${index + 1}`}</strong>
+                      <div className="text-sm text-secondary">ID: {device.id || 'N/A'}</div>
+                      <span className={`badge ${device.connected ? 'badge-success' : 'badge-error'}`}>
                         {device.connected ? 'Conectado' : 'Desconectado'}
                       </span>
                     </div>
-                    <div className="device-actions">
+                    <div className="flex gap-sm">
                       <button 
                         onClick={() => handleDeviceAction(device.id, device.connected ? 'disconnect' : 'connect')}
                         disabled={loading}
@@ -252,29 +251,29 @@ const PluginManager: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <p className="no-devices">Nenhum dispositivo encontrado</p>
+                <p className="text-center text-secondary p-lg">Nenhum dispositivo encontrado</p>
               )}
             </div>
           </div>
 
-          <div className="content-section">
-            <h3>Logs ({logs.length})</h3>
-            <div className="logs-container">
+          <div className="card bg-surface">
+            <h3 className="text-primary mb-md">Logs ({logs.length})</h3>
+            <div className="bg-background border border-border rounded p-md max-h-64 overflow-y-auto">
               {logs.length > 0 ? (
-                <div className="logs-list">
+                <div className="space-y-xs">
                   {logs.slice(0, 10).map((log, index) => (
-                    <div key={index} className="log-item">
+                    <div key={index} className="text-sm font-mono text-secondary border-b border-border pb-xs">
                       {log}
                     </div>
                   ))}
                   {logs.length > 10 && (
-                    <div className="log-item more">
+                    <div className="text-sm font-mono text-muted text-center pt-xs">
                       ... e mais {logs.length - 10} entradas
                     </div>
                   )}
                 </div>
               ) : (
-                <p className="no-logs">Nenhum log disponível</p>
+                <p className="text-center text-secondary">Nenhum log disponível</p>
               )}
             </div>
           </div>

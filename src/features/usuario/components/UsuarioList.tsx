@@ -3,7 +3,6 @@ import { useApi, useApiCreate, useApiUpdate, useApiDelete } from '../../../hooks
 import { Usuario, UsuarioCreate, UsuarioUpdate } from '../types';
 import { ENDPOINTS } from '../../../constants';
 import { UserDataFormatter } from '../../../utils/crypto';
-import '../styles/UsuarioList.css';
 
 const UsuarioList: React.FC = () => {
   // Estados para o formulário
@@ -17,6 +16,21 @@ const UsuarioList: React.FC = () => {
     flAtivo: true,
     dtExpiracao: '',
   });
+
+  // Função para mapear status para classes do tema
+  const getUserStatusClass = (flAtivo: boolean, dtExpiracao?: string): string => {
+    const status = UserDataFormatter.getUserStatus(flAtivo, dtExpiracao).toLowerCase();
+    switch (status) {
+      case 'ativo':
+        return 'badge-success';
+      case 'inativo':
+        return 'badge-error';
+      case 'expirado':
+        return 'badge-warning';
+      default:
+        return 'badge-secondary';
+    }
+  };
 
   // Usando hooks customizados para operações da API
   const { data: usuarios, loading, error, refetch } = useApi<Usuario[]>(ENDPOINTS.USUARIOS);
@@ -114,26 +128,26 @@ const UsuarioList: React.FC = () => {
   const operationError = createError || updateError || deleteError;
 
   if (loading) {
-    return <div className="loading">Carregando usuários...</div>;
+    return <div className="text-center p-xl text-muted">Carregando usuários...</div>;
   }
 
   if (error) {
     return (
-      <div className="error">
+      <div className="alert alert-error">
         <p>Erro: {error}</p>
-        <button onClick={refetch}>Tentar novamente</button>
+        <button onClick={refetch} className="btn btn-error">Tentar novamente</button>
       </div>
     );
   }
 
   return (
-    <div className="user-list">
-      <h2>Lista de Usuários</h2>
+    <div className="card">
+      <h2 className="text-primary mb-lg">Lista de Usuários</h2>
       
-      <div className="actions">
+      <div className="flex gap-md mb-lg flex-wrap">
         <button 
           onClick={refetch} 
-          className="refresh-btn"
+          className="btn btn-secondary"
           disabled={isOperationLoading}
         >
           {isOperationLoading ? 'Processando...' : 'Atualizar Lista'}
@@ -141,7 +155,7 @@ const UsuarioList: React.FC = () => {
         
         <button 
           onClick={() => setShowForm(!showForm)}
-          className="add-btn"
+          className="btn btn-success"
           disabled={isOperationLoading}
         >
           {showForm ? 'Cancelar' : 'Novo Usuário'}
@@ -149,18 +163,18 @@ const UsuarioList: React.FC = () => {
       </div>
 
       {operationError && (
-        <div className="error">
+        <div className="alert alert-error mb-lg">
           <p>Erro na operação: {operationError}</p>
         </div>
       )}
 
       {/* Formulário de criação/edição */}
       {showForm && (
-        <div className="user-form">
-          <h3>{editingUser ? 'Editar Usuário' : 'Novo Usuário'}</h3>
-          <form onSubmit={handleSubmit}>
+        <div className="card bg-surface mb-lg">
+          <h3 className="text-primary mb-md">{editingUser ? 'Editar Usuário' : 'Novo Usuário'}</h3>
+          <form onSubmit={handleSubmit} className="grid gap-md">
             <div className="form-group">
-              <label htmlFor="login">Login:</label>
+              <label htmlFor="login" className="form-label">Login:</label>
               <input
                 type="text"
                 id="login"
@@ -168,11 +182,12 @@ const UsuarioList: React.FC = () => {
                 onChange={(e) => setFormData({ ...formData, login: e.target.value })}
                 maxLength={250}
                 required
+                className="form-control"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="senha">Senha:</label>
+              <label htmlFor="senha" className="form-label">Senha:</label>
               <input
                 type="password"
                 id="senha"
@@ -180,11 +195,12 @@ const UsuarioList: React.FC = () => {
                 onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
                 placeholder={editingUser ? 'Deixe vazio para manter a atual' : ''}
                 required={!editingUser}
+                className="form-control"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="nome">Nome:</label>
+              <label htmlFor="nome" className="form-label">Nome:</label>
               <input
                 type="text"
                 id="nome"
@@ -192,11 +208,12 @@ const UsuarioList: React.FC = () => {
                 onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                 maxLength={250}
                 required
+                className="form-control"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="email">E-mail:</label>
+              <label htmlFor="email" className="form-label">E-mail:</label>
               <input
                 type="email"
                 id="email"
@@ -204,36 +221,39 @@ const UsuarioList: React.FC = () => {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 maxLength={250}
                 required
+                className="form-control"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="flAtivo">
+              <label htmlFor="flAtivo" className="form-label flex items-center gap-sm">
                 <input
                   type="checkbox"
                   id="flAtivo"
                   checked={formData.flAtivo}
                   onChange={(e) => setFormData({ ...formData, flAtivo: e.target.checked })}
+                  className="form-checkbox"
                 />
                 Usuário Ativo
               </label>
             </div>
 
             <div className="form-group">
-              <label htmlFor="dtExpiracao">Data de Expiração:</label>
+              <label htmlFor="dtExpiracao" className="form-label">Data de Expiração:</label>
               <input
                 type="date"
                 id="dtExpiracao"
                 value={formData.dtExpiracao}
                 onChange={(e) => setFormData({ ...formData, dtExpiracao: e.target.value })}
+                className="form-control"
               />
             </div>
 
-            <div className="form-actions">
-              <button type="submit" disabled={isOperationLoading}>
+            <div className="flex gap-md justify-end mt-lg">
+              <button type="submit" disabled={isOperationLoading} className="btn btn-primary">
                 {editingUser ? 'Atualizar' : 'Criar'}
               </button>
-              <button type="button" onClick={resetForm}>
+              <button type="button" onClick={resetForm} className="btn btn-secondary">
                 Cancelar
               </button>
             </div>
@@ -243,36 +263,36 @@ const UsuarioList: React.FC = () => {
 
       {/* Lista de usuários */}
       {!usuarios || usuarios.length === 0 ? (
-        <p>Nenhum usuário encontrado.</p>
+        <p className="text-muted text-center">Nenhum usuário encontrado.</p>
       ) : (
-        <div className="users-grid">
+        <div className="grid grid-cols-auto gap-lg">
           {usuarios.map(usuario => (
-            <div key={usuario.cdUsuario} className="user-card">
-              <div className="user-info">
-                <h4>{usuario.nome}</h4>
-                <p><strong>Login:</strong> {usuario.login}</p>
-                <p><strong>E-mail:</strong> {usuario.email}</p>
-                <p><strong>Cadastro:</strong> {UserDataFormatter.formatDataCadastro(usuario.dataCadastro)}</p>
-                <p><strong>Expiração:</strong> {UserDataFormatter.formatDataExpiracao(usuario.dtExpiracao)}</p>
-                <p>
+            <div key={usuario.cdUsuario} className="card hover-shadow">
+              <div className="mb-md">
+                <h4 className="text-primary mb-sm">{usuario.nome}</h4>
+                <p className="text-sm mb-xs"><strong>Login:</strong> {usuario.login}</p>
+                <p className="text-sm mb-xs"><strong>E-mail:</strong> {usuario.email}</p>
+                <p className="text-sm mb-xs"><strong>Cadastro:</strong> {UserDataFormatter.formatDataCadastro(usuario.dataCadastro)}</p>
+                <p className="text-sm mb-xs"><strong>Expiração:</strong> {UserDataFormatter.formatDataExpiracao(usuario.dtExpiracao)}</p>
+                <p className="text-sm">
                   <strong>Status:</strong> 
-                  <span className={`status ${UserDataFormatter.getUserStatus(usuario.flAtivo, usuario.dtExpiracao).toLowerCase()}`}>
+                  <span className={`badge ml-sm ${getUserStatusClass(usuario.flAtivo, usuario.dtExpiracao)}`}>
                     {UserDataFormatter.getUserStatus(usuario.flAtivo, usuario.dtExpiracao)}
                   </span>
                 </p>
               </div>
               
-              <div className="user-actions">
+              <div className="flex gap-sm justify-end">
                 <button 
                   onClick={() => startEdit(usuario)}
-                  className="update-btn"
+                  className="btn btn-warning btn-sm"
                   disabled={isOperationLoading}
                 >
                   Editar
                 </button>
                 <button 
                   onClick={() => handleDeleteUser(usuario.cdUsuario)}
-                  className="delete-btn"
+                  className="btn btn-error btn-sm"
                   disabled={isOperationLoading}
                 >
                   Deletar

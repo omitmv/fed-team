@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '../features/treino/styles/treinos.css';
 import { usePermissions } from '../hooks/usePermissions';
 import { useTreino } from '../hooks/useTreino';
 import { TreinoFormData, TreinoWithUsers } from '../features/treino/types';
@@ -106,7 +105,7 @@ const TreinosPage: React.FC = () => {
   };
 
   return (
-    <div className="page treinos-page">
+    <div className="page">
       <div className="page-header">
         <div className="header-content">
           <div className="title-section">

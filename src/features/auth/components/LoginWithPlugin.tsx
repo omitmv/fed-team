@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { LoginCredentials } from '../types';
 import { api } from '../../../services/api';
 import { usePlugin } from '../../../hooks/usePlugin';
-import './PluginStatus.css';
 
 const LoginWithPlugin: React.FC = () => {
   const [formData, setFormData] = useState<LoginCredentials>({
@@ -95,20 +94,20 @@ const LoginWithPlugin: React.FC = () => {
       <div className="card login-card">
         <div className="card-body">
           {/* Indicador de status do plugin */}
-          <div className="plugin-status-indicator">
-            <span className={`status-dot ${pluginConnected ? 'connected' : 'disconnected'}`}></span>
-            <span className="status-text">
+          <div className="flex items-center gap-sm mb-md p-sm bg-surface border border-border rounded">
+            <span className={`status-dot ${pluginConnected ? 'status-connected' : 'status-disconnected'}`}></span>
+            <span className="text-sm text-secondary font-medium">
               Plugin: {pluginConnected ? 'Conectado' : 'Desconectado'}
             </span>
           </div>
 
           {error && (
-            <div className="alert alert-danger">
+            <div className="alert alert-error">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="form">
+          <form onSubmit={handleSubmit} className="space-y-md">
             <div className="form-group">
               <label htmlFor="login" className="form-label">
                 Login
@@ -119,7 +118,7 @@ const LoginWithPlugin: React.FC = () => {
                 name="login"
                 value={formData.login}
                 onChange={handleInputChange}
-                className="form-input"
+                className="form-control"
                 required
                 autoComplete="username"
                 placeholder="Digite seu login"
@@ -136,18 +135,18 @@ const LoginWithPlugin: React.FC = () => {
                 name="senha"
                 value={formData.senha}
                 onChange={handleInputChange}
-                className="form-input"
+                className="form-control"
                 required
                 autoComplete="current-password"
                 placeholder="Digite sua senha"
               />
             </div>
 
-            <div className="form-actions">
+            <div className="text-center">
               <button
                 type="button"
                 onClick={handleForgotPassword}
-                className="link-secondary"
+                className="text-primary hover:underline text-sm"
               >
                 Recuperar senha
               </button>
@@ -155,7 +154,7 @@ const LoginWithPlugin: React.FC = () => {
 
             <button
               type="submit"
-              className={`btn btn-primary btn-full ${loading ? 'btn-loading' : ''}`}
+              className={`btn btn-primary w-full ${loading ? 'btn-loading' : ''}`}
               disabled={loading || !formData.login || !formData.senha}
             >
               {loading ? 'Entrando...' : 'Entrar'}
