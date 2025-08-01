@@ -3,6 +3,7 @@ import { useApi, useApiCreate, useApiUpdate, useApiDelete } from '../../../hooks
 import { Usuario, UsuarioCreate, UsuarioUpdate } from '../types';
 import { ENDPOINTS } from '../../../constants';
 import { UserDataFormatter } from '../../../utils/crypto';
+import CardStaffTeam from '../../../components/CardStaffTeam';
 
 const UsuarioList: React.FC = () => {
   // Estados para o formulário
@@ -145,10 +146,10 @@ const UsuarioList: React.FC = () => {
   }
 
   return (
-    <div className="feature-card">
-      <h2 className="text-primary mb-lg">Lista de Usuários</h2>
+    <CardStaffTeam>
+      <h2 className="text-primary mb-lg w-100">Lista de Usuários</h2>
 
-      <div className="flex p-md mb-lg flex-wrap flex-center">
+      <div className="flex p-md mb-lgflex-wrap flex-center">
         <button
           onClick={refetch}
           className="btn btn-secondary"
@@ -174,7 +175,7 @@ const UsuarioList: React.FC = () => {
 
       {/* Formulário de criação/edição */}
       {showForm && (
-        <div className="flex p-md mb-log flex-wrap">
+        <CardStaffTeam>
           <div className="feature-card bg-surface mb-lg">
             <h3 className="text-primary mb-md">{editingUser ? 'Editar Usuário' : 'Novo Usuário'}</h3>
             <form onSubmit={handleSubmit} className="grid gap-md">
@@ -282,14 +283,14 @@ const UsuarioList: React.FC = () => {
               </div>
             </form>
           </div>
-        </div>
+        </CardStaffTeam>
       )}
 
       {/* Lista de usuários */}
       {!usuarios || usuarios.length === 0 ? (
         <p className="text-muted text-center">Nenhum usuário encontrado.</p>
       ) : (
-        <div className="flex p-md mb-lg flex-wrap bg-surface">
+        <CardStaffTeam>
           <div className="feature-grid grid-cols-auto gap-lg">
             {usuarios.map(usuario => (
               <div key={usuario.cdUsuario} className="feature-card hover-shadow">
@@ -326,9 +327,9 @@ const UsuarioList: React.FC = () => {
               </div>
             ))}
           </div>
-        </div>
+        </CardStaffTeam>
       )}
-    </div>
+    </CardStaffTeam>
   );
 };
 
