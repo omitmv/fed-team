@@ -51,8 +51,8 @@ describe('Notification Component', () => {
       const button = screen.getByRole('button');
       const image = screen.getByAltText('Ícone de erro');
       
-      expect(title).toHaveClass('notification-title--error');
-      expect(button).toHaveClass('notification-button--error');
+      expect(title).toHaveClass('text-error');
+      expect(button).toHaveClass('btn-error');
       expect(image).toHaveAttribute('src', '/images/error-icon.svg');
     });
 
@@ -63,8 +63,8 @@ describe('Notification Component', () => {
       const button = screen.getByRole('button');
       const image = screen.getByAltText('Ícone de sucesso');
       
-      expect(title).toHaveClass('notification-title--success');
-      expect(button).toHaveClass('notification-button--success');
+      expect(title).toHaveClass('text-success');
+      expect(button).toHaveClass('btn-success');
       expect(image).toHaveAttribute('src', '/images/success-icon.svg');
     });
   });
@@ -188,8 +188,8 @@ describe('Notification Component', () => {
       const title = screen.getByText('Título de Teste');
       const button = screen.getByRole('button');
       
-      expect(title).toHaveClass('notification-title--success');
-      expect(button).toHaveClass('notification-button--success');
+      expect(title).toHaveClass('text-success');
+      expect(button).toHaveClass('btn-success');
     });
   });
 
@@ -204,7 +204,7 @@ describe('Notification Component', () => {
     test('deve lidar com mensagem vazia', () => {
       renderNotification({ message: '' });
       
-      const messageElement = screen.getByText('', { selector: '.notification-message' });
+      const messageElement = screen.getByText('', { selector: 'p' });
       expect(messageElement).toHaveTextContent('');
     });
 

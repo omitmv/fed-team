@@ -2,7 +2,7 @@
 // allows you to do things like:
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
-import '@testing-library/jest-dom';
+require('@testing-library/jest-dom');
 
 // Mock para axios - precisa ser feito antes de qualquer import que use axios
 const mockAxiosInstance = {
@@ -59,16 +59,7 @@ jest.mock('axios', () => ({
       },
     },
   },
-  AxiosError: class AxiosError extends Error {
-    constructor(message: string) {
-      super(message);
-      this.name = 'AxiosError';
-    }
-    response?: any;
-    request?: any;
-    config?: any;
-    code?: string;
-  },
+  AxiosError: jest.fn(),
 }));
 
 // Mock para variáveis de ambiente
