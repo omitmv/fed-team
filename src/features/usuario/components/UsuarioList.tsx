@@ -2,6 +2,7 @@ import React from 'react';
 import { Usuario } from '../types';
 import { UserDataFormatter } from '../../../utils/crypto';
 import CardStaffTeam from '../../../components/CardStaffTeam';
+import GridStaffTeam from '../../../components/GridStaffTeam';
 
 interface UsuarioListProps {
   usuarios: Usuario[];
@@ -39,7 +40,7 @@ const UsuarioList: React.FC<UsuarioListProps> = ({
 
   return (
     <CardStaffTeam>
-      <div className="feature-grid grid-cols-auto gap-lg">
+      <GridStaffTeam>
         {usuarios.map(usuario => (
           <div key={usuario.cdUsuario} className="feature-card hover-shadow">
             <div className="mb-md">
@@ -74,7 +75,7 @@ const UsuarioList: React.FC<UsuarioListProps> = ({
             </div>
           </div>
         ))}
-      </div>
+      </GridStaffTeam>
     </CardStaffTeam>
   );
 };

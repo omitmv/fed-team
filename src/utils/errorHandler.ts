@@ -15,7 +15,7 @@ export class ApiErrorHandler {
       // Erro de resposta do servidor
       if (error.response) {
         const status = error.response.status;
-        const message = error.response.data?.message;
+        const message = error.response.data?.message || error.response.data;
 
         switch (status) {
           case HTTP_STATUS.BAD_REQUEST:

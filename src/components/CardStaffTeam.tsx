@@ -9,7 +9,7 @@ interface CardStaffTeamProps {
 // Create the CardStaffTeam component
 const CardStaffTeam: React.FC<CardStaffTeamProps> = ({ children, className }) => {
   return (
-    <div className={`feature-card flex p-md mb-lg flex-wrap w-100 flex-center bg-surface ${className}`}>
+    <div className={`feature-card p-md mb-lg flex-wrap w-100 bg-surface ${className}`}>
       {children}
     </div>
   );
