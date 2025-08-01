@@ -6,6 +6,7 @@ import { useAppNavigation } from '../../../hooks/useAppNavigation';
 import MaterialIcon from '../../../components/MaterialIcon';
 import CardStaffTeam from '../../../components/CardStaffTeam';
 import ButtonStaffTeam from '../../../components/ButtonStaffTeam';
+import PageStaffTeam from '../../../components/PageStaffTeam';
 
 const AuthComponent: React.FC = () => {
   const { login, addNotification } = useAppContext();
@@ -84,103 +85,105 @@ const AuthComponent: React.FC = () => {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-container">
-        <CardStaffTeam className="auth-card max-w-md mx-auto">
-          {/* Header */}
-          <div className="text-center mb-lg">
-            <div className="mb-md">
-              <MaterialIcon name="login" color="primary" size="large" />
-            </div>
-            <h1 className="text-xl color-text-primary mb-xs">
-              Fed Team
-            </h1>
-            <p className="color-text-secondary">
-              Faça login para acessar o sistema
-            </p>
-          </div>
-
-          {/* Error Alert */}
-          {error && (
-            <div className="alert alert-error mb-md">
-              <MaterialIcon name="error" color="error" size="small" />
-              <span>{error}</span>
-              <button 
-                onClick={clearError} 
-                className="btn btn-sm btn-ghost ml-auto"
-                title="Fechar erro"
-                aria-label="Fechar mensagem de erro"
-              >
-                <MaterialIcon name="close" size="small" />
-              </button>
-            </div>
-          )}
-
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-md">
-            <div className="form-group">
-              <label htmlFor="login" className="form-label">
-                <MaterialIcon name="person" size="small" className="mr-xs" />
-                Login
-              </label>
-              <input
-                id="login"
-                name="login"
-                type="text"
-                value={formData.login}
-                onChange={handleInputChange}
-                className="form-input"
-                placeholder="Digite seu login"
-                required
-                disabled={loading}
-                autoComplete="username"
-              />
+    <PageStaffTeam>
+      <div className="auth-page">
+        <div className="auth-container">
+          <CardStaffTeam className="auth-card max-w-md mx-auto">
+            {/* Header */}
+            <div className="text-center mb-lg">
+              <div className="mb-md">
+                <MaterialIcon name="login" color="primary" size="large" />
+              </div>
+              <h1 className="text-xl color-text-primary mb-xs">
+                Fed Team
+              </h1>
+              <p className="color-text-secondary">
+                Faça login para acessar o sistema
+              </p>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="senha" className="form-label">
-                <MaterialIcon name="lock" size="small" className="mr-xs" />
-                Senha
-              </label>
-              <input
-                id="senha"
-                name="senha"
-                type="password"
-                value={formData.senha}
-                onChange={handleInputChange}
-                className="form-input"
-                placeholder="Digite sua senha"
-                required
-                disabled={loading}
-                autoComplete="current-password"
-              />
-            </div>
+            {/* Error Alert */}
+            {error && (
+              <div className="alert alert-error mb-md">
+                <MaterialIcon name="error" color="error" size="small" />
+                <span>{error}</span>
+                <button 
+                  onClick={clearError} 
+                  className="btn btn-sm btn-ghost ml-auto"
+                  title="Fechar erro"
+                  aria-label="Fechar mensagem de erro"
+                >
+                  <MaterialIcon name="close" size="small" />
+                </button>
+              </div>
+            )}
 
-            <div className="form-group">
-              <ButtonStaffTeam
-                onClick={handleForgotPassword}
-                className="btn-link"
-                text='Recuperar senha' />
-            </div>
-            {/* Actions */}
-            <div className="flex-align-end">
-              <ButtonStaffTeam
-                onClick={resetForm}
-                className="btn-secondary"
-                disabled={loading}
-                icon={<MaterialIcon name="refresh" size="small" className="mr-xs" />}
-                text='Limpar' />
-              <ButtonStaffTeam
-                typeButton='submit'
-                className="btn-primary"
-                disabled={loading || !formData.login || !formData.senha}
-                icon={loading ? <MaterialIcon name="hourglass_empty" size="small" className="mr-xs animate-spin" /> : <MaterialIcon name="login" size="small" className="mr-xs" />}
-                text={loading ? 'Entrando...' : 'Entrar'} />
-            </div>
-          </form>
-        </CardStaffTeam>
+            {/* Login Form */}
+            <form onSubmit={handleSubmit} className="space-y-md">
+              <div className="form-group">
+                <label htmlFor="login" className="form-label">
+                  <MaterialIcon name="person" size="small" className="mr-xs" />
+                  Login
+                </label>
+                <input
+                  id="login"
+                  name="login"
+                  type="text"
+                  value={formData.login}
+                  onChange={handleInputChange}
+                  className="form-input"
+                  placeholder="Digite seu login"
+                  required
+                  disabled={loading}
+                  autoComplete="username"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="senha" className="form-label">
+                  <MaterialIcon name="lock" size="small" className="mr-xs" />
+                  Senha
+                </label>
+                <input
+                  id="senha"
+                  name="senha"
+                  type="password"
+                  value={formData.senha}
+                  onChange={handleInputChange}
+                  className="form-input"
+                  placeholder="Digite sua senha"
+                  required
+                  disabled={loading}
+                  autoComplete="current-password"
+                />
+              </div>
+
+              <div className="form-group">
+                <ButtonStaffTeam
+                  onClick={handleForgotPassword}
+                  className="btn-link"
+                  text='Recuperar senha' />
+              </div>
+              {/* Actions */}
+              <div className="flex-align-end">
+                <ButtonStaffTeam
+                  onClick={resetForm}
+                  className="btn-secondary"
+                  disabled={loading}
+                  icon={<MaterialIcon name="refresh" size="small" className="mr-xs" />}
+                  text='Limpar' />
+                <ButtonStaffTeam
+                  typeButton='submit'
+                  className="btn-primary"
+                  disabled={loading || !formData.login || !formData.senha}
+                  icon={loading ? <MaterialIcon name="hourglass_empty" size="small" className="mr-xs animate-spin" /> : <MaterialIcon name="login" size="small" className="mr-xs" />}
+                  text={loading ? 'Entrando...' : 'Entrar'} />
+              </div>
+            </form>
+          </CardStaffTeam>
+        </div>
       </div>
-    </div>
+    </PageStaffTeam>
   );
 };
 
