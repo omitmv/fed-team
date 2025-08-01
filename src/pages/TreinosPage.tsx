@@ -4,6 +4,9 @@ import { useTreino } from '../hooks/useTreino';
 import { TreinoFormData, TreinoWithUsers } from '../features/treino/types';
 import { useAppContext } from '../context';
 import { MaterialIcon } from '../components';
+import PageStaffTeam from '../components/PageStaffTeam';
+import PageHeaderStaffTeam from '../components/PageHeaderStaffTeam';
+import PageContentStaffTeam from '../components/PageContentStaffTeam';
 import { 
   MeusTreinosTab, 
   BibliotecaTab, 
@@ -105,28 +108,23 @@ const TreinosPage: React.FC = () => {
   };
 
   return (
-    <div className="page">
-      <div className="page-header">
-        <div className="header-content">
-          <div className="title-section">
-            <h1>
-              <MaterialIcon name="fitness_center" color="primary" size="medium" />
-              Treinos
-            </h1>
-            <p>Gerencie seus treinos e acompanhe seu progresso</p>
-          </div>
-          <div className="header-actions">
-            <button 
-              className="btn btn-primary"
-              onClick={handleCreateTreino}
-            >
-              ➕ Novo Treino
-            </button>
-          </div>
+    <PageStaffTeam>
+      <PageHeaderStaffTeam
+        icon={<MaterialIcon name="fitness_center" color="primary" size="medium" />}
+        title="Treinos"
+        subtitle="Gerencie seus treinos e acompanhe seu progresso"
+      />
+      <PageContentStaffTeam>
+        <div className="flex justify-between items-center mb-lg">
+          <div></div>
+          <button 
+            className="btn btn-primary"
+            onClick={handleCreateTreino}
+          >
+            ➕ Novo Treino
+          </button>
         </div>
-      </div>
 
-      <div className="page-content">
         {/* Tabs de navegação */}
         <TreinoTabNavigation 
           activeTab={activeTab}
@@ -165,8 +163,8 @@ const TreinosPage: React.FC = () => {
             />
           )}
         </div>
-      </div>
-    </div>
+      </PageContentStaffTeam>
+    </PageStaffTeam>
   );
 };
 

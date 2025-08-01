@@ -1,30 +1,32 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MaterialIcon } from '../components';
+import PageStaffTeam from '../components/PageStaffTeam';
+import PageHeaderStaffTeam from '../components/PageHeaderStaffTeam';
+import PageContentStaffTeam from '../components/PageContentStaffTeam';
+import CardStaffTeam from '../components/CardStaffTeam';
 
 export const NotFoundPage: React.FC = () => {
   return (
-    <div className="page not-found-page">
-      <div className="page-header">
-        <h1>
-          <MaterialIcon name="error" color="error" size="medium" />
-          Página não encontrada
-        </h1>
-        <p>A página que você está procurando não existe.</p>
-      </div>
-      <div className="page-content">
-        <div className="not-found-container">
-          <div className="error-code">404</div>
+    <PageStaffTeam>
+      <PageHeaderStaffTeam
+        icon={<MaterialIcon name="error" color="error" size="medium" />}
+        title="Página não encontrada"
+        subtitle="A página que você está procurando não existe."
+      />
+      <PageContentStaffTeam>
+        <CardStaffTeam className="text-center">
+          <div className="error-code text-6xl font-bold text-error mb-lg">404</div>
           <div className="error-message">
-            <p>Oops! Parece que você se perdeu.</p>
+            <p className="text-lg mb-lg">Oops! Parece que você se perdeu.</p>
             <Link to="/" className="btn btn-primary">
               <MaterialIcon name="home" color="white" size="small" />
               Voltar para Home
             </Link>
           </div>
-        </div>
-      </div>
-    </div>
+        </CardStaffTeam>
+      </PageContentStaffTeam>
+    </PageStaffTeam>
   );
 };
 
