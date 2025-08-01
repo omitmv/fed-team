@@ -1088,3 +1088,8 @@
 .w-100 {
   width: 100%;
 }
+
+.flex-align-end {
+  display: flex;
+  justify-content: flex-end;
+}

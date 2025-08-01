@@ -5,6 +5,7 @@ import { useAppContext } from '../../../context';
 import { useAppNavigation } from '../../../hooks/useAppNavigation';
 import MaterialIcon from '../../../components/MaterialIcon';
 import CardStaffTeam from '../../../components/CardStaffTeam';
+import ButtonStaffTeam from '../../../components/ButtonStaffTeam';
 
 const AuthComponent: React.FC = () => {
   const { login, addNotification } = useAppContext();
@@ -75,6 +76,11 @@ const AuthComponent: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleForgotPassword = () => {
+    // TODO: Implementar lógica de recuperação de senha
+    alert('Funcionalidade de recuperação de senha em desenvolvimento');
   };
 
   return (
@@ -150,43 +156,28 @@ const AuthComponent: React.FC = () => {
               />
             </div>
 
+            <div className="form-group">
+              <ButtonStaffTeam
+                onClick={handleForgotPassword}
+                className="btn-link"
+                text='Recuperar senha' />
+            </div>
             {/* Actions */}
-            <div className="flex gap-sm justify-end pt-md">
-              <button 
-                type="button" 
+            <div className="flex-align-end">
+              <ButtonStaffTeam
                 onClick={resetForm}
-                className="btn btn-secondary"
+                className="btn-secondary"
                 disabled={loading}
-              >
-                <MaterialIcon name="refresh" size="small" className="mr-xs" />
-                Limpar
-              </button>
-              <button 
-                type="submit"
-                className="btn btn-primary"
+                icon={<MaterialIcon name="refresh" size="small" className="mr-xs" />}
+                text='Limpar' />
+              <ButtonStaffTeam
+                typeButton='submit'
+                className="btn-primary"
                 disabled={loading || !formData.login || !formData.senha}
-              >
-                {loading ? (
-                  <>
-                    <MaterialIcon name="hourglass_empty" size="small" className="mr-xs animate-spin" />
-                    Entrando...
-                  </>
-                ) : (
-                  <>
-                    <MaterialIcon name="login" size="small" className="mr-xs" />
-                    Entrar
-                  </>
-                )}
-              </button>
+                icon={loading ? <MaterialIcon name="hourglass_empty" size="small" className="mr-xs animate-spin" /> : <MaterialIcon name="login" size="small" className="mr-xs" />}
+                text={loading ? 'Entrando...' : 'Entrar'} />
             </div>
           </form>
-
-          {/* Footer */}
-          <div className="text-center mt-lg pt-md border-t">
-            <p className="text-sm color-text-muted">
-              Sistema de Gerenciamento Fed Team
-            </p>
-          </div>
         </CardStaffTeam>
       </div>
     </div>

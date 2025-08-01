@@ -1,6 +1,7 @@
 import React from 'react';
 import { Usuario, UsuarioCreate } from '../types';
 import CardStaffTeam from '../../../components/CardStaffTeam';
+import ButtonStaffTeam from '../../../components/ButtonStaffTeam';
 
 interface UsuarioFormProps {
   formData: UsuarioCreate;
@@ -118,9 +119,20 @@ const UsuarioForm: React.FC<UsuarioFormProps> = ({
         </div>
 
         <div className="flex gap-md justify-end mt-lg">
+          <ButtonStaffTeam 
+            typeButton="submit"
+            disabled={isOperationLoading}
+            className="btn-primary">
+            {editingUser ? 'Atualizar' : 'Criar'}
+          </ButtonStaffTeam>
           <button type="submit" disabled={isOperationLoading} className="btn btn-primary">
             {editingUser ? 'Atualizar' : 'Criar'}
           </button>
+          
+          <ButtonStaffTeam
+            onClick={onCancel}
+            className="btn-secondary"
+          >Cancelar</ButtonStaffTeam>
           <button type="button" onClick={onCancel} className="btn btn-secondary">
             Cancelar
           </button>

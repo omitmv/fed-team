@@ -2,8 +2,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import Login from './Login';
 import { AppProvider } from '../../../context';
+import AuthComponent from './AuthComponent';
 
 // Mock do useAppNavigation
 jest.mock('../../../hooks/useAppNavigation', () => ({
@@ -25,14 +25,14 @@ const renderWithProviders = (component: React.ReactElement) => {
   );
 };
 
-describe('Login Component', () => {
+describe('Auth Component', () => {
   test('deve renderizar sem erro', () => {
-    renderWithProviders(<Login />);
+    renderWithProviders(<AuthComponent />);
     expect(screen.getByRole('textbox', { name: /login/i })).toBeInTheDocument();
   });
 
   test('deve habilitar botão quando campos preenchidos', async () => {
-    renderWithProviders(<Login />);
+    renderWithProviders(<AuthComponent />);
     
     const loginInput = screen.getByRole('textbox', { name: /login/i });
     const senhaInput = screen.getByLabelText(/senha/i);

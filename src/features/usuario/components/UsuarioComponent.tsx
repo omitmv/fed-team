@@ -68,7 +68,7 @@ const UsuarioComponent: React.FC = () => {
       email: '',
       flAtivo: true,
       dtExpiracao: '',
-      cdTpAcesso: 1,
+      cdTpAcesso: 6,
     });
     setEditingUser(null);
     setShowForm(false);

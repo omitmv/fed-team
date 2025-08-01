@@ -3,7 +3,7 @@ import React from "react";
 import '../styles/layout.css';
 
 interface ButtonStaffTeamProps {
-  onClick: () => Promise<void> | void;
+  onClick?: () => Promise<void> | void;
   icon?: React.ReactNode;
   className?: string;
   disabled?: boolean;
