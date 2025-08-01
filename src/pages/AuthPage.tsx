@@ -1,23 +1,22 @@
 import React from 'react';
 import { Login } from '../features/auth';
 import { MaterialIcon } from '../components';
+import PageContentStaffTeam from '../components/PageContentStaffTeam';
+import PageHeaderStaffTeam from '../components/PageHeaderStaffTeam';
+import PageStaffTeam from '../components/PageStaffTeam';
 
 export const AuthPage: React.FC = () => {
   return (
-    <div className="page auth-page">
-      <div className="page-header">
-        <h1>
-          <MaterialIcon name="login" color="primary" size="medium" />
-          Autenticação
-        </h1>
-        <p>Faça login para acessar o sistema</p>
-      </div>
-      <div className="page-content">
-        <div className="auth-container">
-          <Login />
-        </div>
-      </div>
-    </div>
+    <PageStaffTeam>
+      <PageHeaderStaffTeam
+        icon={<MaterialIcon name="login" color="primary" size="medium" />}
+        title="Autenticação"
+        subtitle="Faça login para acessar o sistema"
+      />
+      <PageContentStaffTeam>
+        <Login />
+      </PageContentStaffTeam>
+    </PageStaffTeam>
   );
 };
 
