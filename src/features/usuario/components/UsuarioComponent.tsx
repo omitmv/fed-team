@@ -5,6 +5,7 @@ import { ENDPOINTS } from '../../../constants';
 import CardStaffTeam from '../../../components/CardStaffTeam';
 import UsuarioForm from './UsuarioForm';
 import UsuarioList from './UsuarioList';
+import ButtonStaffTeam from '../../../components/ButtonStaffTeam';
 
 const UsuarioComponent: React.FC = () => {
   // Estados para o formulário
@@ -91,7 +92,6 @@ const UsuarioComponent: React.FC = () => {
   // Função para submeter o formulário
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (editingUser) {
       // Atualização - não enviar campos vazios
       const updateData: UsuarioUpdate = {};
@@ -106,7 +106,6 @@ const UsuarioComponent: React.FC = () => {
       if (formData.cdTpAcesso !== editingUser.cdTpAcesso) {
         updateData.cdTpAcesso = formData.cdTpAcesso;
       }
-      
       handleUpdateUser(editingUser.cdUsuario, updateData);
     } else {
       // Criação
@@ -128,7 +127,10 @@ const UsuarioComponent: React.FC = () => {
     return (
       <div className="alert alert-error">
         <p>Erro: {error}</p>
-        <button onClick={refetch} className="btn btn-error">Tentar novamente</button>
+        <ButtonStaffTeam
+          onClick={refetch}
+          className="btn-error"
+          text='Tentar novamente' />
       </div>
     );
   }
@@ -136,31 +138,26 @@ const UsuarioComponent: React.FC = () => {
   return (
     <CardStaffTeam>
       <h2 className="text-primary mb-lg w-100">Lista de Usuários</h2>
-
       <div className="flex p-md mb-lgflex-wrap flex-center">
-        <button
+        <ButtonStaffTeam
           onClick={refetch}
-          className="btn btn-secondary"
-          disabled={isOperationLoading}
-        >
+          className="btn-secondary"
+          disabled={isOperationLoading}>
           {isOperationLoading ? 'Processando...' : 'Atualizar Lista'}
-        </button>
-        
-        <button 
+        </ButtonStaffTeam>
+        <ButtonStaffTeam
           onClick={() => setShowForm(!showForm)}
-          className="btn btn-success"
+          className="btn-success"
           disabled={isOperationLoading}
         >
           {showForm ? 'Cancelar' : 'Novo Usuário'}
-        </button>
+        </ButtonStaffTeam>
       </div>
-
       {operationError && (
         <div className="alert alert-error mb-lg">
           <p>Erro na operação: {operationError}</p>
         </div>
       )}
-
       {/* Formulário de criação/edição */}
       {showForm && (
         <UsuarioForm
@@ -172,7 +169,6 @@ const UsuarioComponent: React.FC = () => {
           onCancel={resetForm}
         />
       )}
-
       {/* Lista de usuários */}
       <UsuarioList 
         usuarios={usuarios || []}

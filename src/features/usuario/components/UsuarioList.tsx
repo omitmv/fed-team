@@ -3,6 +3,7 @@ import { Usuario } from '../types';
 import { UserDataFormatter } from '../../../utils/crypto';
 import CardStaffTeam from '../../../components/CardStaffTeam';
 import GridStaffTeam from '../../../components/GridStaffTeam';
+import ButtonStaffTeam from '../../../components/ButtonStaffTeam';
 
 interface UsuarioListProps {
   usuarios: Usuario[];
@@ -56,22 +57,17 @@ const UsuarioList: React.FC<UsuarioListProps> = ({
                 </span>
               </p>
             </div>
-            
-            <div className="flex gap-sm justify-end">
-              <button 
+            <div className="flex gap-sm justify-center">
+              <ButtonStaffTeam
                 onClick={() => onEdit(usuario)}
-                className="btn btn-warning btn-sm"
+                className="btn-warning btn-sm"
                 disabled={isLoading}
-              >
-                Editar
-              </button>
-              <button 
+                text='Editar' />
+              <ButtonStaffTeam
                 onClick={() => onDelete(usuario.cdUsuario)}
-                className="btn btn-error btn-sm"
+                className="btn-error btn-sm"
                 disabled={isLoading}
-              >
-                Deletar
-              </button>
+                text='Deletar' />
             </div>
           </div>
         ))}
