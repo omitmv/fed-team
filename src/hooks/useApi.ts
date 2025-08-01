@@ -47,6 +47,36 @@ export function useApi<T>(url: string, immediate: boolean = true): UseApiResult<
 }
 
 /**
+ * Hook customizado para operações (POST)
+ * @returns Função para criar recurso e estados de loading/error
+ */
+export function useApiAuth<T, D = any>() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const auth = useCallback(async (url: string, data: D): Promise<T | null> => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await api.post<T>(url, data);
+      return response.data;
+    } catch (err: any) {
+      const errorMessage = ApiErrorHandler.handleError(err);
+      setError(errorMessage);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return {
+    auth,
+    loading,
+    error,
+  };
+}
+
+/**
  * Hook customizado para operações de criação (POST)
  * @returns Função para criar recurso e estados de loading/error
  */

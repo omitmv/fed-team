@@ -41,7 +41,7 @@ const UsuarioComponent: React.FC = () => {
   // Função para atualizar um usuário
   const handleUpdateUser = async (cdUsuario: number, userData: UsuarioUpdate) => {
     // Enviar senha em texto plano - criptografia será feita no backend
-    const updatedUser = await update(ENDPOINTS.USUARIO_BY_ID(cdUsuario), userData);
+    const updatedUser = await update(ENDPOINTS.UPDATE_USUARIO(cdUsuario), userData);
     if (updatedUser) {
       refetch(); // Recarrega a lista após atualizar
       setEditingUser(null);
@@ -52,7 +52,7 @@ const UsuarioComponent: React.FC = () => {
   // Função para deletar um usuário
   const handleDeleteUser = async (cdUsuario: number) => {
     if (window.confirm('Tem certeza que deseja deletar este usuário?')) {
-      const success = await deleteResource(ENDPOINTS.USUARIO_BY_ID(cdUsuario));
+      const success = await deleteResource(ENDPOINTS.DELETE_USUARIO(cdUsuario));
       if (success) {
         refetch(); // Recarrega a lista após deletar
       }

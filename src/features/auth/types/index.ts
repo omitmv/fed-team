@@ -11,8 +11,9 @@ export interface LoginResponse {
   login: string;
   nome: string;
   email: string;
-  cdTpAcesso: number;
   expiresIn: number;
+  cdTpAcesso: number;
+  tipoAcesso: string;
 }
 
 export interface User {

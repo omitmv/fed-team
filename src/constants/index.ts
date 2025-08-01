@@ -17,10 +17,9 @@ export const ENDPOINTS = {
   // Endpoints para usuários seguindo a especificação da API
   USUARIOS: '/v1/usuario',
   USUARIO_BY_ID: (id: number) => `/v1/usuario/${id}`,
-  
-  // Endpoints legados (manter para compatibilidade se necessário)
-  USERS: '/users',
-  USER_BY_ID: (id: number) => `/users/${id}`,
+  UPDATE_USUARIO: (id: number) => `/v1/usuario/${id}`,
+  DELETE_USUARIO: (id: number) => `/v1/usuario/${id}`,
+  LOGIN: '/v1/usuario/login',
 } as const;
 
 export const HTTP_STATUS = {
