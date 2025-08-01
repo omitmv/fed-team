@@ -1,5 +1,5 @@
 import React from 'react';
-import { UsuarioList } from '../features/usuario';
+import { UsuarioComponent } from '../features/usuario';
 import { MaterialIcon } from '../components';
 import PageStaffTeam from '../components/PageStaffTeam';
 import PageHeaderStaffTeam from '../components/PageHeaderStaffTeam';
@@ -14,7 +14,7 @@ export const UsuariosPage: React.FC = () => {
         subtitle="Administre usuários do sistema"
       />
       <PageContentStaffTeam>
-        <UsuarioList />
+        <UsuarioComponent />
       </PageContentStaffTeam>
     </PageStaffTeam>
   );
