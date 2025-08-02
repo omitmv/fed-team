@@ -25,7 +25,7 @@ const UsuarioComponent: React.FC = () => {
   const { data: usuarios, loading, error, refetch } = useApi<Usuario[]>(ENDPOINTS.USUARIOS);
   const { create, loading: createLoading, error: createError } = useApiCreate<Usuario, UsuarioCreate>();
   const { update, loading: updateLoading, error: updateError } = useApiUpdate<Usuario, UsuarioUpdate>();
-  const { deleteResource, loading: deleteLoading, error: deleteError } = useApiDelete();
+  const { deleteResource, loading: deleteLoading, error: deleteError } = useApiDelete<Usuario>();
 
   // Função para criar um novo usuário
   const handleCreateUser = async (userData: UsuarioCreate) => {
@@ -135,6 +135,20 @@ const UsuarioComponent: React.FC = () => {
     );
   }
 
+  const handleNewUserOrCancel = () => {
+    setFormData({
+      login: '',
+      senha: '',
+      nome: '',
+      email: '',
+      flAtivo: true,
+      dtExpiracao: '',
+      cdTpAcesso: 6,
+    });
+    setEditingUser(null);
+    setShowForm(!showForm);
+  };
+
   return (
     <CardStaffTeam>
       <h2 className="text-primary mb-lg w-100">Lista de Usuários</h2>
@@ -146,7 +160,7 @@ const UsuarioComponent: React.FC = () => {
           {isOperationLoading ? 'Processando...' : 'Atualizar Lista'}
         </ButtonStaffTeam>
         <ButtonStaffTeam
-          onClick={() => setShowForm(!showForm)}
+          onClick={handleNewUserOrCancel}
           className="btn-success"
           disabled={isOperationLoading}
         >

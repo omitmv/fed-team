@@ -1,104 +1,68 @@
-import React, { useState, useEffect } from 'react';
-import { usePermissions } from '../../../hooks/usePermissions';
-import { useTreino } from '../../../hooks/useTreino';
-import { TreinoFormData, TreinoWithUsers } from '../types';
-import { useAppContext } from '../../../context';
-import { MaterialIcon } from '../../../components';
+import React, { useState } from 'react';
+import { useApi, useApiCreate, useApiUpdate, useApiDelete } from '../../../hooks/useApi';
+import { Treino, TreinoCreate, TreinoUpdate } from '../types';
+import { ENDPOINTS } from '../../../constants';
 import CardStaffTeam from '../../../components/CardStaffTeam';
 import TreinoForm from './TreinoForm';
 import TreinoList from './TreinoList';
+import ButtonStaffTeam from '../../../components/ButtonStaffTeam';
 
 const TreinoComponent: React.FC = () => {
-  const { canCreateTraining } = usePermissions();
-  const { state } = useAppContext();
-  const { 
-    loading, 
-    error, 
-    createTreino, 
-    getTreinosWithUsers, 
-    validarDatas, 
-    calcularDuracao,
-    clearError 
-  } = useTreino();
-  
-  // Estados para navegação e dados
-  const [treinos, setTreinos] = useState<TreinoWithUsers[]>([]);
+  // Estados para o formulário
   const [showForm, setShowForm] = useState(false);
-  const [editingTreino, setEditingTreino] = useState<TreinoWithUsers | null>(null);
-  
-  // Estados para formulário
-  const [formData, setFormData] = useState<TreinoFormData>({
+  const [editingTreino, setEditingTreino] = useState<Treino | null>(null);
+  const [formData, setFormData] = useState<TreinoCreate>({
     dsTreino: '',
-    dtInicio: '',
-    dtFinal: '',
-    cdProfissional: state.currentUser ? Number(state.currentUser.id) : 1,
+    dtInicio: new Date(),
+    dtFinal: new Date(),
+    cdProfissional: 1, // TODO: pegar do usuário logado
     cdAtleta: 1, // TODO: Implementar seleção de atleta
     obs: ''
   });
 
-  // Função para carregar treinos
-  const loadTreinos = React.useCallback(async () => {
-    const data = await getTreinosWithUsers();
-    setTreinos(data);
-  }, [getTreinosWithUsers]);
-
-  // Carregar treinos ao montar o componente
-  useEffect(() => {
-    loadTreinos();
-  }, [loadTreinos]);
+  // Usando hooks customizados para operações da API
+  const { data: treinos, loading, error, refetch } = useApi<Treino[]>(ENDPOINTS.NEW_TREINO);
+  const { create, loading: createLoading, error: createError } = useApiCreate<Treino, TreinoCreate>();
+  const { update, loading: updateLoading, error: updateError } = useApiUpdate<Treino, TreinoUpdate>();
+  const { deleteResource, loading: deleteLoading, error: deleteError } = useApiDelete<Treino>();
 
   // Função para criar um novo treino
-  const handleCreateTreino = async (data: TreinoFormData) => {
-    const validationResult = validarDatas(data.dtInicio, data.dtFinal);
-    
-    if (validationResult) {
-      console.error('Erro de validação:', validationResult);
-      return;
-    }
-
-    const success = await createTreino({
-      dsTreino: data.dsTreino,
-      dtInicio: data.dtInicio,
-      dtFinal: data.dtFinal,
-      cdProfissional: data.cdProfissional,
-      cdAtleta: data.cdAtleta,
-      obs: data.obs
-    });
-
-    if (success) {
-      await loadTreinos(); // Recarrega a lista
+  const handleCreateTreino = async (treinoData: TreinoCreate) => {
+    const newTreino = await create(ENDPOINTS.NEW_TREINO, treinoData);
+    if (newTreino) {
+      refetch(); // Recarrega a lista após criar
       setShowForm(false);
       resetForm();
     }
   };
 
-  // Função para atualizar um treino (para futura implementação)
-  const handleUpdateTreino = async (data: TreinoFormData) => {
-    // TODO: Implementar atualização
-    console.log('Atualizar treino:', data);
-  };
-
-  // Função para deletar um treino (para futura implementação)
-  const handleDeleteTreino = async (treinoId: number) => {
-    if (window.confirm('Tem certeza que deseja deletar este treino?')) {
-      // TODO: Implementar deleção
-      console.log('Deletar treino:', treinoId);
+  // Função para atualizar um treino
+  const handleUpdateTreino = async (cdTreino: number, treinoData: TreinoUpdate) => {
+    const updatedTreino = await update(ENDPOINTS.UPDATE_TREINO(cdTreino), treinoData);
+    if (updatedTreino) {
+      refetch(); // Recarrega a lista após atualizar
+      setEditingTreino(null);
+      resetForm();
     }
   };
 
-  // Função para executar um treino
-  const handleExecutarTreino = (treinoId: number) => {
-    // TODO: Implementar execução do treino
-    console.log('Executar treino:', treinoId);
+  // Função para deletar um treino
+  const handleDeleteTreino = async (cdTreino: number) => {
+    if (window.confirm('Tem certeza que deseja deletar este treino?')) {
+      const success = await deleteResource(ENDPOINTS.UPDATE_TREINO(cdTreino)); // Usando o mesmo endpoint com DELETE
+      if (success) {
+        refetch(); // Recarrega a lista após deletar
+      }
+    }
   };
 
   // Função para resetar o formulário
   const resetForm = () => {
     setFormData({
       dsTreino: '',
-      dtInicio: '',
-      dtFinal: '',
-      cdProfissional: state.currentUser ? Number(state.currentUser.id) : 1,
+      dtInicio: new Date(),
+      dtFinal: new Date(),
+      cdProfissional: 1,
       cdAtleta: 1,
       obs: ''
     });
@@ -107,56 +71,63 @@ const TreinoComponent: React.FC = () => {
   };
 
   // Função para iniciar edição
-  const startEdit = (treino: TreinoWithUsers) => {
+  const startEdit = (treino: Treino) => {
     setEditingTreino(treino);
     setFormData({
       dsTreino: treino.dsTreino,
-      dtInicio: treino.dtInicio.toString().split('T')[0], // Converter para formato de input date
-      dtFinal: treino.dtFinal.toString().split('T')[0],
-      cdProfissional: treino.profissional.cdUsuario,
-      cdAtleta: treino.atleta.cdUsuario,
+      dtInicio: treino.dtInicio,
+      dtFinal: treino.dtFinal,
+      cdProfissional: treino.cdProfissional,
+      cdAtleta: treino.cdAtleta,
       obs: treino.obs || ''
     });
     setShowForm(true);
   };
 
   // Função para lidar com o submit do formulário
-  const handleFormSubmit = (data: TreinoFormData) => {
+  const handleFormSubmit = (data: TreinoCreate) => {
     if (editingTreino) {
-      handleUpdateTreino(data);
+      handleUpdateTreino(editingTreino.cdTreino, data);
     } else {
       handleCreateTreino(data);
     }
   };
 
-  // Estados de loading combinados
-  const isOperationLoading = loading;
-  const operationError = error;
+  // Função para calcular duração entre datas
+  const calcularDuracao = (dtInicio: string | Date, dtFinal: string | Date): number => {
+    const inicio = typeof dtInicio === 'string' ? new Date(dtInicio) : dtInicio;
+    const final = typeof dtFinal === 'string' ? new Date(dtFinal) : dtFinal;
+    const diffTime = Math.abs(final.getTime() - inicio.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
 
-  // Se estiver carregando treinos
-  if (loading && treinos.length === 0) {
+  // Estados de loading combinados
+  const isOperationLoading = createLoading || updateLoading || deleteLoading;
+
+  // Erros combinados  
+  const operationError = createError || updateError || deleteError;
+
+  if (loading) {
     return (
       <CardStaffTeam>
-        <div className="text-center py-lg">
-          <MaterialIcon name="hourglass_empty" color="secondary" size="large" className="mb-md animate-spin" />
-          <p className="color-text-secondary">Carregando treinos...</p>
+        <div className="flex justify-center items-center p-lg">
+          <div className="text-center">
+            <p>Carregando treinos...</p>
+          </div>
         </div>
       </CardStaffTeam>
     );
   }
 
-  // Se houver erro
-  if (error && treinos.length === 0) {
+  if (error) {
     return (
       <CardStaffTeam>
-        <div className="text-center py-lg">
-          <MaterialIcon name="error" color="error" size="large" className="mb-md" />
-          <h3 className="text-lg color-text-error mb-sm">Erro ao carregar treinos</h3>
-          <p className="color-text-secondary mb-md">Erro: {error}</p>
-          <button onClick={loadTreinos} className="btn btn-error">
-            <MaterialIcon name="refresh" size="small" className="mr-xs" />
+        <div className="text-center p-lg">
+          <p className="text-error mb-md">Erro: {error}</p>
+          <ButtonStaffTeam onClick={refetch}>
             Tentar novamente
-          </button>
+          </ButtonStaffTeam>
         </div>
       </CardStaffTeam>
     );
@@ -164,63 +135,45 @@ const TreinoComponent: React.FC = () => {
 
   return (
     <CardStaffTeam>
-      {/* Header com botão de ação */}
+      {/* Header */}
       <div className="flex items-center justify-between mb-lg">
-        <div>
-          <h2 className="text-xl color-text-primary mb-xs">
-            <MaterialIcon name="fitness_center" color="primary" size="medium" className="mr-sm" />
-            Gerenciamento de Treinos
-          </h2>
-          <p className="color-text-secondary">Gerencie seus treinos de forma eficiente</p>
-        </div>
-        
-        {!showForm && canCreateTraining() && (
-          <button 
+        <h2 className="text-xl font-semibold">Gerenciamento de Treinos</h2>
+        {!showForm && (
+          <ButtonStaffTeam 
             onClick={() => setShowForm(true)}
-            className="btn btn-primary"
             disabled={isOperationLoading}
           >
-            <MaterialIcon name="add" size="small" className="mr-xs" />
             Novo Treino
-          </button>
-        )}
-        
-        {operationError && (
-          <button 
-            onClick={clearError}
-            className="btn btn-error ml-sm"
-            title="Limpar erro"
-          >
-            <MaterialIcon name="refresh" size="small" className="mr-xs" />
-            Tentar novamente
-          </button>
+          </ButtonStaffTeam>
         )}
       </div>
 
+      {/* Exibir erros de operação */}
+      {operationError && (
+        <div className="alert alert-error mb-md">
+          <span>{operationError}</span>
+        </div>
+      )}
+
       {/* Formulário de criação/edição */}
       {showForm && (
-        <div className="mb-lg">
-          <TreinoForm
-            formData={formData}
-            setFormData={setFormData}
-            editingTreino={editingTreino}
-            onSubmit={handleFormSubmit}
-            onCancel={resetForm}
-            isLoading={isOperationLoading}
-            error={operationError}
-            onClearError={clearError}
-            calcularDuracao={calcularDuracao}
-          />
-        </div>
+        <TreinoForm
+          formData={formData}
+          setFormData={setFormData}
+          editingTreino={editingTreino}
+          onSubmit={handleFormSubmit}
+          onCancel={resetForm}
+          isLoading={isOperationLoading}
+          calcularDuracao={calcularDuracao}
+        />
       )}
 
       {/* Lista de Treinos */}
       {!showForm && (
         <TreinoList 
-          treinos={treinos}
+          treinos={treinos || []}
           onEdit={startEdit}
           onDelete={handleDeleteTreino}
-          onExecutar={handleExecutarTreino}
           isLoading={isOperationLoading}
         />
       )}

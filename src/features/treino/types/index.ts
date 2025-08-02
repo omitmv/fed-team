@@ -27,8 +27,28 @@ export interface Treino {
   dtInicio: Date; // data de início obrigatória
   dtFinal: Date; // data final obrigatória
   cdProfissional: number; // FK para tbUsuario (profissional)
+  nomeProfissional?: string; // nome do profissional, opcional
   cdAtleta: number; // FK para tbUsuario (atleta)
+  nomeAtleta?: string; // nome do atleta, opcional
   obs?: string; // observações, máx 2500 chars
+}
+
+export interface TreinoCreate {
+  dsTreino: string; // nome do treino
+  dtInicio: Date; // data de início
+  dtFinal: Date; // data final
+  cdProfissional: number; // ID do profissional
+  cdAtleta: number; // ID do atleta
+  obs?: string; // observações
+}
+
+export interface TreinoUpdate {
+  dsTreino?: string; // nome do treino, opcional
+  dtInicio?: Date; // data de início, opcional
+  dtFinal?: Date; // data final, opcional
+  cdProfissional?: number; // ID do profissional, opcional
+  cdAtleta?: number; // ID do atleta, opcional
+  obs?: string; // observações, opcional
 }
 
 export interface SessaoTreino {
@@ -51,15 +71,6 @@ export interface SerieExecutada {
   tempoExecutado?: number;
   completada: boolean;
   observacoes?: string;
-}
-
-export interface TreinoFormData {
-  dsTreino: string; // nome do treino
-  dtInicio: string; // data de início (string para inputs)
-  dtFinal: string; // data final (string para inputs)
-  cdProfissional: number; // ID do profissional
-  cdAtleta: number; // ID do atleta
-  obs?: string; // observações
 }
 
 export interface TreinoCreateRequest {

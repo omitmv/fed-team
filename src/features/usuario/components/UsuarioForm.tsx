@@ -110,11 +110,11 @@ const UsuarioForm: React.FC<UsuarioFormProps> = ({
           >
             <option value="">Selecione um tipo de acesso</option>
             <option value="1">Administrador</option>
-            <option value="2">Profissional</option>
-            <option value="3">Atleta</option>
-            <option value="4">Visitante</option>
-            <option value="5">Convidado</option>
-            <option value="6">Padrão</option>
+            <option value="2">Nutricionista</option>
+            <option value="3">Treinador</option>
+            <option value="4">Coach</option>
+            <option value="5">Funcionário</option>
+            <option value="6">Atleta</option>
           </select>
         </div>
 
@@ -123,19 +123,13 @@ const UsuarioForm: React.FC<UsuarioFormProps> = ({
             typeButton="submit"
             disabled={isOperationLoading}
             className="btn-primary">
-            {editingUser ? 'Atualizar' : 'Criar'}
+              {editingUser ? 'Atualizar' : 'Criar'}
           </ButtonStaffTeam>
-          <button type="submit" disabled={isOperationLoading} className="btn btn-primary">
-            {editingUser ? 'Atualizar' : 'Criar'}
-          </button>
-          
           <ButtonStaffTeam
             onClick={onCancel}
-            className="btn-secondary"
-          >Cancelar</ButtonStaffTeam>
-          <button type="button" onClick={onCancel} className="btn btn-secondary">
-            Cancelar
-          </button>
+            className="btn-secondary">
+              Cancelar
+          </ButtonStaffTeam>
         </div>
       </form>
     </CardStaffTeam>

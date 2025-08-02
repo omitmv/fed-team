@@ -16,10 +16,14 @@ export const APP_CONFIG = {
 export const ENDPOINTS = {
   // Endpoints para usuários seguindo a especificação da API
   USUARIOS: '/v1/usuario',
+  USUARIOS_BY_TP_ACESSOS: (cdTpAcesso: number[]) => `/v1/usuario/filtrar-por-tipos/${cdTpAcesso}`,
   USUARIO_BY_ID: (id: number) => `/v1/usuario/${id}`,
   UPDATE_USUARIO: (id: number) => `/v1/usuario/${id}`,
   DELETE_USUARIO: (id: number) => `/v1/usuario/${id}`,
   LOGIN: '/v1/usuario/login',
+  TREINOS_BY_PROFISSIONAL: (cdProfissional: number) => `/v1/treino/profissional/${cdProfissional}`,
+  NEW_TREINO: '/v1/treino',
+  UPDATE_TREINO: (cdTreino: number) => `/v1/treino/${cdTreino}`,
 } as const;
 
 export const HTTP_STATUS = {

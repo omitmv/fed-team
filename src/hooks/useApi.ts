@@ -140,20 +140,20 @@ export function useApiUpdate<T, D = any>() {
  * Hook customizado para operações de exclusão (DELETE)
  * @returns Função para deletar recurso e estados de loading/error
  */
-export function useApiDelete() {
+export function useApiDelete<T>() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const deleteResource = useCallback(async (url: string): Promise<boolean> => {
+  const deleteResource = useCallback(async (url: string): Promise<T | null> => {
     try {
       setLoading(true);
       setError(null);
-      await api.delete(url);
-      return true;
+      const response = await api.delete<T>(url);
+      return response.data;
     } catch (err: any) {
       const errorMessage = ApiErrorHandler.handleError(err);
       setError(errorMessage);
-      return false;
+      return null;
     } finally {
       setLoading(false);
     }

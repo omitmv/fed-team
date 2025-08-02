@@ -21,7 +21,7 @@ const AuthComponent: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { auth, loading: apiLoading, error: apiError } = useApiAuth<LoginResponse, LoginCredentials>();
+  const { auth } = useApiAuth<LoginResponse, LoginCredentials>();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

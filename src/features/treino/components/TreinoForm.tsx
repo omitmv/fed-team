@@ -1,18 +1,17 @@
 import React from 'react';
 import { MaterialIcon } from '../../../components';
-import { TreinoFormData } from '../types';
+import { Treino, TreinoCreate } from '../types';
 import { useAppContext } from '../../../context';
 import CardStaffTeam from '../../../components/CardStaffTeam';
 
 interface TreinoFormProps {
-  formData: TreinoFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TreinoFormData>>;
-  editingTreino?: any; // Para futura edição
-  onSubmit: (data: TreinoFormData) => void;
+  formData: TreinoCreate;
+  setFormData: React.Dispatch<React.SetStateAction<TreinoCreate>>;
+  editingTreino?: Treino | null; // Para futura edição
+  isOperationLoading?: boolean; // Para indicar se a operação está em andamento
+  onSubmit: (data: TreinoCreate) => void;
   onCancel: () => void;
   isLoading?: boolean;
-  error?: string | null;
-  onClearError?: () => void;
   calcularDuracao: (dtInicio: string, dtFinal: string) => number;
 }
 
@@ -20,11 +19,10 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
   formData,
   setFormData,
   editingTreino,
+  isOperationLoading,
   onSubmit,
   onCancel,
   isLoading = false,
-  error,
-  onClearError,
   calcularDuracao
 }) => {
   const { state } = useAppContext();
@@ -34,7 +32,7 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
     onSubmit(formData);
   };
 
-  const handleInputChange = (field: keyof TreinoFormData, value: string | number) => {
+  const handleInputChange = (field: keyof TreinoCreate, value: string | number) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -42,54 +40,22 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
   };
 
   const duracao = formData.dtInicio && formData.dtFinal 
-    ? calcularDuracao(formData.dtInicio, formData.dtFinal)
+    ? calcularDuracao(
+        typeof formData.dtInicio === 'string' ? formData.dtInicio : formData.dtInicio.toISOString().slice(0, 10),
+        typeof formData.dtFinal === 'string' ? formData.dtFinal : formData.dtFinal.toISOString().slice(0, 10)
+      )
     : 0;
 
   return (
     <CardStaffTeam>
-      <div className="flex items-center justify-between mb-lg">
-        <div>
-          <h3 className="text-lg color-text-primary mb-xs">
-            <MaterialIcon name="add_circle" color="success" size="small" className="mr-xs" />
-            {editingTreino ? 'Editar Treino' : 'Cadastrar Novo Treino'}
-          </h3>
-          <p className="text-sm color-text-secondary">
-            {editingTreino ? 'Modifique as informações do treino' : 'Crie um novo treino personalizado'}
-          </p>
-        </div>
-        <button 
-          onClick={onCancel}
-          className="btn btn-secondary btn-sm"
-          disabled={isLoading}
-        >
-          <MaterialIcon name="close" size="small" className="mr-xs" />
-          Cancelar
-        </button>
-      </div>
-
-      {error && onClearError && (
-        <div className="alert alert-error mb-md">
-          <MaterialIcon name="error" color="error" size="small" />
-          <span>{error}</span>
-          <button 
-            onClick={onClearError} 
-            className="btn btn-sm btn-ghost ml-auto"
-            title="Fechar erro"
-            aria-label="Fechar mensagem de erro"
-          >
-            <MaterialIcon name="close" size="small" />
-          </button>
-        </div>
-      )}
+      <h3 className="text-lg color-text-primary mb-xs">
+        <MaterialIcon name="add_circle" color="success" size="small" className="mr-xs" />
+        {editingTreino ? 'Editar Treino' : 'Cadastrar Novo Treino'}
+      </h3>
 
       <form onSubmit={handleSubmit} className="form-grid gap-md">
         {/* Informações Básicas */}
         <div className="form-section col-span-full">
-          <h4 className="text-md mb-sm color-text-primary">
-            <MaterialIcon name="info" color="primary" size="small" className="mr-xs" />
-            Informações Básicas
-          </h4>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
             <div className="form-group">
               <label htmlFor="ds-treino" className="form-label">
@@ -100,7 +66,7 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
                 type="text"
                 value={formData.dsTreino}
                 onChange={(e) => handleInputChange('dsTreino', e.target.value)}
-                className="form-input"
+                className="form-input w-100"
                 placeholder="Ex: Treino de Peito e Tríceps"
                 required
                 disabled={isLoading}
@@ -116,7 +82,7 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
                 type="number"
                 value={formData.cdAtleta}
                 onChange={(e) => handleInputChange('cdAtleta', Number(e.target.value))}
-                className="form-input"
+                className="form-input w-100"
                 placeholder="ID do atleta"
                 required
                 disabled={isLoading}
@@ -130,11 +96,6 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
 
         {/* Período */}
         <div className="form-section col-span-full">
-          <h4 className="text-md mb-sm color-text-primary">
-            <MaterialIcon name="schedule" color="primary" size="small" className="mr-xs" />
-            Período do Treino
-          </h4>
-          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
             <div className="form-group">
               <label htmlFor="dt-inicio" className="form-label">
@@ -143,9 +104,9 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
               <input
                 id="dt-inicio"
                 type="date"
-                value={formData.dtInicio}
+                value={typeof formData.dtInicio === 'string' ? formData.dtInicio : formData.dtInicio.toISOString().slice(0, 10)}
                 onChange={(e) => handleInputChange('dtInicio', e.target.value)}
-                className="form-input"
+                className="form-input w-100"
                 required
                 disabled={isLoading}
               />
@@ -158,9 +119,9 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
               <input
                 id="dt-final"
                 type="date"
-                value={formData.dtFinal}
+                value={typeof formData.dtFinal === 'string' ? formData.dtFinal : formData.dtFinal.toISOString().slice(0, 10)}
                 onChange={(e) => handleInputChange('dtFinal', e.target.value)}
-                className="form-input"
+                className="form-input w-100"
                 required
                 disabled={isLoading}
               />
@@ -178,37 +139,21 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
 
         {/* Profissional */}
         <div className="form-section col-span-full">
-          <h4 className="text-md mb-sm color-text-primary">
-            <MaterialIcon name="person" color="primary" size="small" className="mr-xs" />
-            Profissional Responsável
-          </h4>
-          
           <div className="form-group">
             <label htmlFor="cd-profissional" className="form-label">
               Profissional*
             </label>
             <input
               id="cd-profissional"
-              type="number"
+              type="hidden"
               value={formData.cdProfissional}
-              onChange={(e) => handleInputChange('cdProfissional', Number(e.target.value))}
-              className="form-input"
-              required
-              disabled={isLoading}
             />
-            <small className="form-hint">
-              Usuário logado: {state.currentUser?.nome || 'Não identificado'}
-            </small>
+            <p>{state.currentUser?.nome || 'Não identificado'}</p>
           </div>
         </div>
 
         {/* Observações */}
         <div className="form-section col-span-full">
-          <h4 className="text-md mb-sm color-text-primary">
-            <MaterialIcon name="notes" color="primary" size="small" className="mr-xs" />
-            Observações
-          </h4>
-          
           <div className="form-group">
             <label htmlFor="obs" className="form-label">
               Observações
@@ -237,20 +182,14 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
           </button>
           <button 
             type="submit"
-            className="btn btn-primary"
-            disabled={isLoading || !formData.dsTreino || !formData.dtInicio || !formData.dtFinal}
-          >
-            {isLoading ? (
-              <>
-                <MaterialIcon name="hourglass_empty" size="small" className="mr-xs animate-spin" />
-                {editingTreino ? 'Salvando...' : 'Criando...'}
-              </>
-            ) : (
-              <>
-                <MaterialIcon name="save" size="small" className="mr-xs" />
-                {editingTreino ? 'Salvar Alterações' : 'Criar Treino'}
-              </>
-            )}
+            disabled={isOperationLoading}
+            className="btn btn-primary">
+              {editingTreino ? 'Salvando...' : 'Criando...'}
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary">
+              Cancelar
           </button>
         </div>
       </form>

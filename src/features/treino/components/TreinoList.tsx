@@ -1,12 +1,11 @@
 import React from 'react';
 import { MaterialIcon } from '../../../components';
-import { TreinoWithUsers } from '../types';
-import { useTreino } from '../../../hooks/useTreino';
+import { Treino } from '../types';
 import CardStaffTeam from '../../../components/CardStaffTeam';
 
 interface TreinoListProps {
-  treinos: TreinoWithUsers[];
-  onEdit?: (treino: TreinoWithUsers) => void;
+  treinos: Treino[];
+  onEdit?: (treino: Treino) => void;
   onDelete?: (treinoId: number) => void;
   onExecutar?: (treinoId: number) => void;
   isLoading?: boolean;
@@ -19,10 +18,19 @@ const TreinoList: React.FC<TreinoListProps> = ({
   onExecutar,
   isLoading = false 
 }) => {
-  const { calcularDuracao } = useTreino();
-
+  /**
+   * Calcular duração em dias entre duas datas
+   */
+  const calcularDuracao = (dtInicio: string, dtFinal: string): number => {
+    const inicio = new Date(dtInicio);
+    const final = new Date(dtFinal);
+    const diffTime = Math.abs(final.getTime() - inicio.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+  
   // Função para determinar o status do treino
-  const getTreinoStatus = (treino: TreinoWithUsers) => {
+  const getTreinoStatus = (treino: Treino) => {
     const hoje = new Date();
     const inicio = new Date(treino.dtInicio);
     const final = new Date(treino.dtFinal);
@@ -122,11 +130,11 @@ const TreinoList: React.FC<TreinoListProps> = ({
                   <div className="space-y-xs">
                     <p className="text-sm">
                       <MaterialIcon name="person" size="small" className="mr-xs" />
-                      <strong>Profissional:</strong> {treino.profissional.nome}
+                      <strong>Profissional:</strong> {treino.cdProfissional}
                     </p>
                     <p className="text-sm">
                       <MaterialIcon name="sports" size="small" className="mr-xs" />
-                      <strong>Atleta:</strong> {treino.atleta.nome}
+                      <strong>Atleta:</strong> {treino.cdAtleta}
                     </p>
                     <p className="text-sm">
                       <MaterialIcon name="schedule" size="small" className="mr-xs" />
