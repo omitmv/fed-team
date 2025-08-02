@@ -93,8 +93,15 @@ const UsuarioComponent: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (editingUser) {
+      console.log('Form data:', formData);
+      console.log('Editing user:', editingUser);
       // Atualização - não enviar campos vazios
-      const updateData: UsuarioUpdate = {};
+      const updateData: UsuarioUpdate = {
+        login: formData.login,
+        nome: formData.nome,
+        email: formData.email,
+        cdTpAcesso: formData.cdTpAcesso ?? 6,
+      };
       if (formData.login !== editingUser.login) updateData.login = formData.login;
       if (formData.senha) updateData.senha = formData.senha;
       if (formData.nome !== editingUser.nome) updateData.nome = formData.nome;
@@ -104,7 +111,7 @@ const UsuarioComponent: React.FC = () => {
         updateData.dtExpiracao = formData.dtExpiracao || undefined;
       }
       if (formData.cdTpAcesso !== editingUser.cdTpAcesso) {
-        updateData.cdTpAcesso = formData.cdTpAcesso;
+        updateData.cdTpAcesso = formData.cdTpAcesso || 6;
       }
       handleUpdateUser(editingUser.cdUsuario, updateData);
     } else {

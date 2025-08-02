@@ -13,6 +13,7 @@ interface TreinoFormProps {
   onCancel: () => void;
   isLoading?: boolean;
   calcularDuracao: (dtInicio: string, dtFinal: string) => number;
+  atletas: { cdUsuario: number; nome: string }[]; // Lista de atletas para seleção
 }
 
 const TreinoForm: React.FC<TreinoFormProps> = ({
@@ -22,7 +23,8 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
   onSubmit,
   onCancel,
   isLoading = false,
-  calcularDuracao
+  calcularDuracao,
+  atletas
 }) => {
   const { state } = useAppContext();
 
@@ -76,19 +78,21 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
               <label htmlFor="cd-atleta" className="form-label">
                 Atleta*
               </label>
-              <input
+              <select
                 id="cd-atleta"
-                type="number"
                 value={formData.cdAtleta}
                 onChange={(e) => handleInputChange('cdAtleta', Number(e.target.value))}
                 className="form-input w-100"
-                placeholder="ID do atleta"
                 required
                 disabled={isLoading}
-              />
-              <small className="form-hint">
-                TODO: Implementar seleção de atleta
-              </small>
+              >
+                <option value="">Selecione um atleta</option>
+                {atletas.map(atleta => (
+                  <option key={atleta.cdUsuario} value={atleta.cdUsuario}>
+                    {atleta.nome}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
@@ -103,7 +107,7 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
               <input
                 id="dt-inicio"
                 type="date"
-                value={typeof formData.dtInicio === 'string' ? formData.dtInicio : formData.dtInicio.toLocaleDateString().slice(0, 10)}
+                value={typeof formData.dtInicio === 'string' ? formData.dtInicio : formData.dtInicio.toLocaleDateString('pt-BR').slice(0, 10)}
                 onChange={(e) => handleInputChange('dtInicio', e.target.value)}
                 className="form-input w-100"
                 required
@@ -118,7 +122,7 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
               <input
                 id="dt-final"
                 type="date"
-                value={typeof formData.dtFinal === 'string' ? formData.dtFinal : formData.dtFinal.toLocaleDateString().slice(0, 10)}
+                value={typeof formData.dtFinal === 'string' ? formData.dtFinal : formData.dtFinal.toLocaleDateString('pt-BR').slice(0, 10)}
                 onChange={(e) => handleInputChange('dtFinal', e.target.value)}
                 className="form-input w-100"
                 required

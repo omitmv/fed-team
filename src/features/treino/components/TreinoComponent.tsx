@@ -7,6 +7,7 @@ import TreinoForm from './TreinoForm';
 import TreinoList from './TreinoList';
 import ButtonStaffTeam from '../../../components/ButtonStaffTeam';
 import { useAppContext } from '../../../context';
+import { Usuario } from '../../usuario';
 
 const TreinoComponent: React.FC = () => {
   const { state } = useAppContext();
@@ -27,6 +28,7 @@ const TreinoComponent: React.FC = () => {
   const { create, loading: createLoading, error: createError } = useApiCreate<Treino, TreinoCreate>();
   const { update, loading: updateLoading, error: updateError } = useApiUpdate<Treino, TreinoUpdate>();
   const { deleteResource, loading: deleteLoading, error: deleteError } = useApiDelete<Treino>();
+  const { data: atletas, loading: atletasLoading, error: atletasError } = useApi<Usuario[]>(ENDPOINTS.ONLY_ATLETAS); // Apenas atletas
 
   // Função para criar um novo treino
   const handleCreateTreino = async (treinoData: TreinoCreate) => {
@@ -106,10 +108,10 @@ const TreinoComponent: React.FC = () => {
   };
 
   // Estados de loading combinados
-  const isOperationLoading = createLoading || updateLoading || deleteLoading;
+  const isOperationLoading = createLoading || updateLoading || deleteLoading || atletasLoading;
 
-  // Erros combinados  
-  const operationError = createError || updateError || deleteError;
+  // Erros combinados
+  const operationError = createError || updateError || deleteError || atletasError;
 
   if (loading) {
     return (
@@ -167,6 +169,7 @@ const TreinoComponent: React.FC = () => {
           onCancel={resetForm}
           isLoading={isOperationLoading}
           calcularDuracao={calcularDuracao}
+          atletas={atletas || []}
         />
       )}
 

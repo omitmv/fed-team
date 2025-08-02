@@ -34,13 +34,13 @@ export interface UsuarioCreate {
  * IMPORTANTE: senha, se fornecida, deve ser em texto plano - API fará a criptografia
  */
 export interface UsuarioUpdate {
-  login?: string;
+  login: string;
   senha?: string;              // Nova senha em texto plano - será criptografada pela API
-  nome?: string;
-  email?: string;
+  nome: string;
+  email: string;
   flAtivo?: boolean;
   dtExpiracao?: string;
-  cdTpAcesso?: number;         // Tipo de acesso (1-Administrador, 2-Profissional, 3-Atleta, 4-Visitante, 5-Convidado, 6-Padrão)
+  cdTpAcesso: number;         // Tipo de acesso (1-Administrador, 2-Profissional, 3-Atleta, 4-Visitante, 5-Convidado, 6-Padrão)
 }
 
 /**

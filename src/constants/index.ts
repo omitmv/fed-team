@@ -24,6 +24,7 @@ export const ENDPOINTS = {
   TREINOS_BY_PROFISSIONAL: (cdProfissional: number) => `/v1/treino/profissional/${cdProfissional}`,
   NEW_TREINO: '/v1/treino',
   UPDATE_TREINO: (cdTreino: number) => `/v1/treino/${cdTreino}`,
+  ONLY_ATLETAS: '/v1/usuario/filtrar-por-tipos/6', // Atletas
 } as const;
 
 export const HTTP_STATUS = {
