@@ -139,8 +139,8 @@ const TreinoComponent: React.FC = () => {
   return (
     <CardStaffTeam>
       {/* Header */}
-      <div className="flex items-center justify-between mb-lg">
-        <h2 className="text-xl font-semibold">Gerenciamento de Treinos</h2>
+      <h2 className="text-xl font-semibold">Gerenciamento de Treinos</h2>
+      <div className="flex p-md mb-lgflex-wrap flex-center">
         {!showForm && (
           <ButtonStaffTeam 
             onClick={() => setShowForm(true)}
@@ -149,14 +149,13 @@ const TreinoComponent: React.FC = () => {
             Novo Treino
           </ButtonStaffTeam>
         )}
+        {/* Exibir erros de operação */}
+        {operationError && (
+          <div className="alert alert-error mb-md">
+            <span>{operationError}</span>
+          </div>
+        )}
       </div>
-
-      {/* Exibir erros de operação */}
-      {operationError && (
-        <div className="alert alert-error mb-md">
-          <span>{operationError}</span>
-        </div>
-      )}
 
       {/* Formulário de criação/edição */}
       {showForm && (
