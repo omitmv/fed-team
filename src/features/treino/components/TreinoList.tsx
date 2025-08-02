@@ -28,7 +28,7 @@ const TreinoList: React.FC<TreinoListProps> = ({
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   };
-  
+
   // Função para determinar o status do treino
   const getTreinoStatus = (treino: Treino) => {
     const hoje = new Date();
@@ -130,11 +130,11 @@ const TreinoList: React.FC<TreinoListProps> = ({
                   <div className="space-y-xs">
                     <p className="text-sm">
                       <MaterialIcon name="person" size="small" className="mr-xs" />
-                      <strong>Profissional:</strong> {treino.cdProfissional}
+                      <strong>Profissional:</strong> {treino.nomeProfissional || 'N/A'}
                     </p>
                     <p className="text-sm">
                       <MaterialIcon name="sports" size="small" className="mr-xs" />
-                      <strong>Atleta:</strong> {treino.cdAtleta}
+                      <strong>Atleta:</strong> {treino.nomeAtleta || 'N/A'}
                     </p>
                     <p className="text-sm">
                       <MaterialIcon name="schedule" size="small" className="mr-xs" />

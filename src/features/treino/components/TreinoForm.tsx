@@ -19,7 +19,6 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
   formData,
   setFormData,
   editingTreino,
-  isOperationLoading,
   onSubmit,
   onCancel,
   isLoading = false,
@@ -41,8 +40,8 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
 
   const duracao = formData.dtInicio && formData.dtFinal 
     ? calcularDuracao(
-        typeof formData.dtInicio === 'string' ? formData.dtInicio : formData.dtInicio.toISOString().slice(0, 10),
-        typeof formData.dtFinal === 'string' ? formData.dtFinal : formData.dtFinal.toISOString().slice(0, 10)
+        typeof formData.dtInicio === 'string' ? formData.dtInicio : formData.dtInicio.toLocaleDateString().slice(0, 10),
+        typeof formData.dtFinal === 'string' ? formData.dtFinal : formData.dtFinal.toLocaleDateString().slice(0, 10)
       )
     : 0;
 
@@ -104,7 +103,7 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
               <input
                 id="dt-inicio"
                 type="date"
-                value={typeof formData.dtInicio === 'string' ? formData.dtInicio : formData.dtInicio.toISOString().slice(0, 10)}
+                value={typeof formData.dtInicio === 'string' ? formData.dtInicio : formData.dtInicio.toLocaleDateString().slice(0, 10)}
                 onChange={(e) => handleInputChange('dtInicio', e.target.value)}
                 className="form-input w-100"
                 required
@@ -119,7 +118,7 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
               <input
                 id="dt-final"
                 type="date"
-                value={typeof formData.dtFinal === 'string' ? formData.dtFinal : formData.dtFinal.toISOString().slice(0, 10)}
+                value={typeof formData.dtFinal === 'string' ? formData.dtFinal : formData.dtFinal.toLocaleDateString().slice(0, 10)}
                 onChange={(e) => handleInputChange('dtFinal', e.target.value)}
                 className="form-input w-100"
                 required
@@ -182,14 +181,9 @@ const TreinoForm: React.FC<TreinoFormProps> = ({
           </button>
           <button 
             type="submit"
-            disabled={isOperationLoading}
+            disabled={isLoading}
             className="btn btn-primary">
-              {editingTreino ? 'Salvando...' : 'Criando...'}
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary">
-              Cancelar
+              {editingTreino ? 'Salvar' : 'Criar'}
           </button>
         </div>
       </form>

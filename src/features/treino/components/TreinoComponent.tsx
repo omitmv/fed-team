@@ -6,8 +6,10 @@ import CardStaffTeam from '../../../components/CardStaffTeam';
 import TreinoForm from './TreinoForm';
 import TreinoList from './TreinoList';
 import ButtonStaffTeam from '../../../components/ButtonStaffTeam';
+import { useAppContext } from '../../../context';
 
 const TreinoComponent: React.FC = () => {
+  const { state } = useAppContext();
   // Estados para o formulário
   const [showForm, setShowForm] = useState(false);
   const [editingTreino, setEditingTreino] = useState<Treino | null>(null);
@@ -21,13 +23,14 @@ const TreinoComponent: React.FC = () => {
   });
 
   // Usando hooks customizados para operações da API
-  const { data: treinos, loading, error, refetch } = useApi<Treino[]>(ENDPOINTS.NEW_TREINO);
+  const { data: treinos, loading, error, refetch } = useApi<Treino[]>(ENDPOINTS.TREINOS_BY_PROFISSIONAL(formData.cdProfissional)); // Passando o ID do profissional
   const { create, loading: createLoading, error: createError } = useApiCreate<Treino, TreinoCreate>();
   const { update, loading: updateLoading, error: updateError } = useApiUpdate<Treino, TreinoUpdate>();
   const { deleteResource, loading: deleteLoading, error: deleteError } = useApiDelete<Treino>();
 
   // Função para criar um novo treino
   const handleCreateTreino = async (treinoData: TreinoCreate) => {
+    treinoData.cdProfissional = Number(state.currentUser?.id);
     const newTreino = await create(ENDPOINTS.NEW_TREINO, treinoData);
     if (newTreino) {
       refetch(); // Recarrega a lista após criar
