@@ -21,10 +21,23 @@ export const ENDPOINTS = {
   UPDATE_USUARIO: (id: number) => `/v1/usuario/${id}`,
   DELETE_USUARIO: (id: number) => `/v1/usuario/${id}`,
   LOGIN: '/v1/usuario/login',
+  ONLY_ATLETAS: '/v1/usuario/filtrar-por-tipos/6', // Atletas
+  // Endpoints para treinos
   TREINOS_BY_PROFISSIONAL: (cdProfissional: number) => `/v1/treino/profissional/${cdProfissional}`,
   NEW_TREINO: '/v1/treino',
   UPDATE_TREINO: (cdTreino: number) => `/v1/treino/${cdTreino}`,
-  ONLY_ATLETAS: '/v1/usuario/filtrar-por-tipos/6', // Atletas
+  // Endpoints para exercícios
+  EXERCICIOS: '/v1/exercicio',
+  // Endpoints para Estimulos
+  ESTIMULOS: '/v1/estimulo',
+  // Endpoints para Grupos Musculares
+  GRUPOS_MUSCULARES: '/v1/grupo-muscular',
+  // Endpoints para Sistema
+  SISTEMAS: '/v1/sistema',
+  // Endpoints para Menu
+  MENUS: '/v1/menu',
+  // Endpoints para Técnicas
+  TECNICAS: '/v1/tecnica',
 } as const;
 
 export const HTTP_STATUS = {

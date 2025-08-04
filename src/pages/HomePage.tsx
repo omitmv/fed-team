@@ -11,8 +11,8 @@ export const HomePage: React.FC = () => {
     <PageStaffTeam>
       <PageHeaderStaffTeam 
         icon={<MaterialIcon name="home" color="primary" size="medium" />} 
-        title='Bem-vindo ao Fed Team' 
-        subtitle='Sistema de gerenciamento de plugins e usuários' />
+        title='Bem-vindo ao Staff Team' 
+        subtitle='Sistema de gerenciamento de equipe' />
       <PageContentStaffTeam>
         <div className="feature-grid">
           <CardStaffTeam>

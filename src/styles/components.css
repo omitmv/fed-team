@@ -1093,3 +1093,8 @@
   display: flex;
   justify-content: flex-end;
 }
+
+select:focus {
+  background-color: var(--color-secondary);
+  color: var(--color-text-primary);
+}
