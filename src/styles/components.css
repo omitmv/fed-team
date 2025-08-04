@@ -1098,3 +1098,81 @@ select:focus {
   background-color: var(--color-secondary);
   color: var(--color-text-primary);
 }
+
+/* ======= HIERARCHICAL NAVIGATION ======= */
+
+/* Menu group header */
+.drawer-menu-group-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: none;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  text-align: left;
+}
+
+.drawer-menu-group-header:hover {
+  background-color: var(--color-background-hover);
+  color: var(--color-primary);
+}
+
+.drawer-menu-group-header:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+/* Submenu container */
+.drawer-submenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-normal) ease-out;
+  background-color: var(--color-background-secondary);
+}
+
+.drawer-submenu.expanded {
+  max-height: 500px; /* Altura suficiente para os submenus */
+  transition: max-height var(--transition-normal) ease-in;
+}
+
+/* Sub-items styling */
+.drawer-menu-link.sub-item {
+  padding-left: calc(var(--spacing-lg) + var(--spacing-xl));
+  font-size: var(--font-size-sm);
+  border-left: 2px solid transparent;
+}
+
+.drawer-menu-link.sub-item:hover {
+  border-left-color: var(--color-primary);
+  background-color: var(--color-background-hover);
+}
+
+.drawer-menu-link.sub-item.active {
+  border-left-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+/* Group header expanded state */
+.drawer-menu-group-header.expanded {
+  background-color: var(--color-background-hover);
+  color: var(--color-primary);
+}
+
+/* Smooth icon rotation for expand/collapse */
+.drawer-menu-group-header .material-icons-outlined {
+  transition: transform var(--transition-fast);
+}
+
+.drawer-menu-group-header.expanded .material-icons-outlined:last-child {
+  transform: rotate(180deg);
+}

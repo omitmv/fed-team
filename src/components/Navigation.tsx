@@ -8,10 +8,100 @@ interface NavigationProps {
   className?: string;
 }
 
+interface MenuItem {
+  id: string;
+  label: string;
+  icon: string;
+  path?: string;
+  children?: MenuItem[];
+}
+
+interface MenuGroup {
+  id: string;
+  label: string;
+  icon: string;
+  items: MenuItem[];
+}
+
+const menuStructure: (MenuItem | MenuGroup)[] = [
+  // Dashboard - Item único
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    icon: 'home',
+    path: '/'
+  },
+  
+  // Alunos - Grupo
+  {
+    id: 'alunos',
+    label: 'Alunos',
+    icon: 'people',
+    items: [
+      {
+        id: 'alunos-cadastro',
+        label: 'Cadastro',
+        icon: 'person_add',
+        path: '/usuarios'
+      }
+    ]
+  },
+  
+  // Biblioteca - Grupo
+  {
+    id: 'biblioteca',
+    label: 'Biblioteca',
+    icon: 'library_books',
+    items: [
+      {
+        id: 'biblioteca-treino',
+        label: 'Treino',
+        icon: 'fitness_center',
+        path: '/treinos'
+      },
+      {
+        id: 'biblioteca-plano-alimentar',
+        label: 'Plano Alimentar',
+        icon: 'restaurant',
+        path: '/planos-alimentares'
+      }
+    ]
+  },
+  
+  // Financeiro - Grupo
+  {
+    id: 'financeiro',
+    label: 'Financeiro',
+    icon: 'attach_money',
+    items: [
+      {
+        id: 'financeiro-planos',
+        label: 'Planos',
+        icon: 'credit_card',
+        path: '/planos'
+      }
+    ]
+  },
+  
+  // Plugins - Item único (mantido para compatibilidade)
+  {
+    id: 'plugins',
+    label: 'Plugins',
+    icon: 'extension',
+    path: '/plugins'
+  }
+];
+
+// Função auxiliar para verificar se é um grupo
+const isGroup = (item: MenuItem | MenuGroup): item is MenuGroup => {
+  return 'items' in item;
+};
+
 export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
   const { state, logout } = useAppContext();
   // Força o drawer a sempre iniciar fechado
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   
   // Garante que o drawer sempre inicie fechado após a montagem
   useEffect(() => {
@@ -35,6 +125,59 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
 
   const handleMenuItemClick = () => {
     setIsDrawerOpen(false);
+  };
+
+  const toggleGroup = (groupId: string) => {
+    setExpandedGroups(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(groupId)) {
+        newSet.delete(groupId);
+      } else {
+        newSet.add(groupId);
+      }
+      return newSet;
+    });
+  };
+
+  const renderMenuItem = (item: MenuItem, isSubItem = false) => (
+    <li key={item.id} className="drawer-menu-item">
+      <NavLink 
+        to={item.path || '/'} 
+        className={({ isActive }) => 
+          `drawer-menu-link ${isActive ? 'active' : ''} ${isSubItem ? 'sub-item' : ''}`
+        }
+        onClick={handleMenuItemClick}
+        end={item.path === '/'}
+      >
+        <MaterialIcon name={item.icon} color="primary" size="small" />
+        <span>{item.label}</span>
+      </NavLink>
+    </li>
+  );
+
+  const renderMenuGroup = (group: MenuGroup) => {
+    const isExpanded = expandedGroups.has(group.id);
+    
+    return (
+      <li key={group.id} className="drawer-menu-group">
+        <button 
+          className={`drawer-menu-group-header ${isExpanded ? 'expanded' : ''}`}
+          onClick={() => toggleGroup(group.id)}
+          {...(isExpanded ? { 'aria-expanded': 'true' } : { 'aria-expanded': 'false' })}
+        >
+          <MaterialIcon name={group.icon} color="primary" size="small" />
+          <span>{group.label}</span>
+          <MaterialIcon 
+            name={isExpanded ? 'expand_less' : 'expand_more'} 
+            color="primary" 
+            size="small" 
+          />
+        </button>
+        <ul className={`drawer-submenu ${isExpanded ? 'expanded' : ''}`}>
+          {group.items.map(item => renderMenuItem(item, true))}
+        </ul>
+      </li>
+    );
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -101,67 +244,9 @@ export const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
         {/* Drawer Content */}
         <div className="drawer-content">
           <ul className="drawer-menu">
-            <li className="drawer-menu-item">
-              <NavLink 
-                to="/" 
-                className={({ isActive }) => 
-                  `drawer-menu-link ${isActive ? 'active' : ''}`
-                }
-                onClick={handleMenuItemClick}
-                end
-              >
-                <MaterialIcon name="home" color="primary" size="small" />
-                <span>Home</span>
-              </NavLink>
-            </li>
-            <li className="drawer-menu-item">
-              <NavLink 
-                to="/auth" 
-                className={({ isActive }) => 
-                  `drawer-menu-link ${isActive ? 'active' : ''}`
-                }
-                onClick={handleMenuItemClick}
-              >
-                <MaterialIcon name="login" color="primary" size="small" />
-                <span>Autenticação</span>
-              </NavLink>
-            </li>
-            <li className="drawer-menu-item">
-              <NavLink 
-                to="/usuarios" 
-                className={({ isActive }) => 
-                  `drawer-menu-link ${isActive ? 'active' : ''}`
-                }
-                onClick={handleMenuItemClick}
-              >
-                <MaterialIcon name="people" color="primary" size="small" />
-                <span>Usuários</span>
-              </NavLink>
-            </li>
-            <li className="drawer-menu-item">
-              <NavLink 
-                to="/plugins" 
-                className={({ isActive }) => 
-                  `drawer-menu-link ${isActive ? 'active' : ''}`
-                }
-                onClick={handleMenuItemClick}
-              >
-                <MaterialIcon name="extension" color="primary" size="small" />
-                <span>Plugins</span>
-              </NavLink>
-            </li>
-            <li className="drawer-menu-item">
-              <NavLink 
-                to="/treinos" 
-                className={({ isActive }) => 
-                  `drawer-menu-link ${isActive ? 'active' : ''}`
-                }
-                onClick={handleMenuItemClick}
-              >
-                <MaterialIcon name="fitness_center" color="primary" size="small" />
-                <span>Treinos</span>
-              </NavLink>
-            </li>
+            {menuStructure.map(item => 
+              isGroup(item) ? renderMenuGroup(item) : renderMenuItem(item)
+            )}
           </ul>
         </div>
 
